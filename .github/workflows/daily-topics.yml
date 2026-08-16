@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   update:
@@ -25,13 +26,24 @@ jobs:
         run: node scripts/fetch-topics.mjs
 
       - name: 変更をコミット
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if git diff --quiet data/topics.json; then
             echo "変更なし"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             git add data/topics.json
             git commit -m "chore: 今日のトピックを更新"
             git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # GITHUB_TOKEN による push は他のワークフローを起動しない仕様のため、
+      # コミットしたときは Pages のデプロイを明示的に呼び出す
+      - name: サイトを再デプロイ
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml
