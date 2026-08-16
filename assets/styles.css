@@ -137,7 +137,7 @@ tr.worst td{background:rgba(77,163,224,.07)}
 .bar{display:inline-block;height:7px;border-radius:1px;vertical-align:middle;margin-right:6px}
 
 .heat{overflow-x:auto;margin-top:14px}
-.heat table{min-width:660px;font-size:11px}
+.heat table{min-width:740px;font-size:11px}
 .heat td,.heat th{padding:4px 5px;text-align:center;border:1px solid rgba(14,22,38,.85)}
 .heat th:first-child,.heat td:first-child{text-align:left;position:sticky;left:0;background:var(--panel);z-index:1}
 

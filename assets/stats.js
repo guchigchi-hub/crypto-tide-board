@@ -8,6 +8,20 @@ const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
 const median = a => {const s=a.slice().sort((x,y)=>x-y),h=s.length>>1;
   return s.length%2?s[h]:(s[h-1]+s[h])/2;};
 
+/* ビットコインの半減期（年・月） */
+const HALVINGS = [
+  {y:2012,m:11},  // 2012-11-28
+  {y:2016,m:7},   // 2016-07-09
+  {y:2020,m:5},   // 2020-05-11
+  {y:2024,m:4}    // 2024-04-20
+];
+/** y年m月が直近の半減期から何か月目か（半減期前なら null） */
+function monthsSinceHalving(y,m){
+  let last=null;
+  HALVINGS.forEach(h=>{ if(h.y<y||(h.y===y&&h.m<=m)) last=h; });
+  return last?(y-last.y)*12+(m-last.m):null;
+}
+
 /* ── 月別統計 ── */
 async function buildMonthlyReturns(){
   const rows=[];
@@ -89,12 +103,25 @@ export async function renderMonthly(){
 
   const years=[]; rows.forEach(r=>{ if(years.indexOf(r.y)<0) years.push(r.y); });
   years.sort();
-  let h='<table><thead><tr><th>年</th>'+MONTHS.map(m=>'<th>'+m.replace("月","")+'</th>').join("")
+  let h='<table><thead><tr><th>年</th><th>半減期から</th>'+MONTHS.map(m=>'<th>'+m.replace("月","")+'</th>').join("")
     +'<th>年間</th></tr></thead><tbody>';
   years.forEach(y=>{
     const yr=rows.filter(r=>r.y===y);
     let tot=1; yr.forEach(r=>tot*=(1+r.ret/100));
-    h+='<tr><td>'+y+'</td>';
+    // その年の各月が「直近の半減期から何か月目」かを示す列。
+    // 半減期があった年はその月を表示。金色が濃いほど半減期に近い時期
+    const yMin=Math.min.apply(null,yr.map(r=>r.m)), yMax=Math.max.apply(null,yr.map(r=>r.m));
+    const hv=HALVINGS.filter(hd=>hd.y===y)[0];
+    let hvText, hvMid;
+    if(hv){ hvText="半減期 "+hv.m+"月"; hvMid=0; }
+    else{
+      const a=monthsSinceHalving(y,yMin), b=monthsSinceHalving(y,yMax);
+      hvText=(a==null?"—":a+"〜"+b+"か月");
+      hvMid=monthsSinceHalving(y,Math.round((yMin+yMax)/2));
+    }
+    const hvAlpha=hvMid==null?0:[.45,.28,.16,.07][Math.min(3,Math.floor(hvMid/12))];
+    h+='<tr><td>'+y+'</td>'
+      +'<td style="background:rgba(224,169,59,'+hvAlpha+')">'+hvText+'</td>';
     for(let m=1;m<=12;m++){
       const r=yr.filter(x=>x.m===m)[0];
       if(!r){ h+='<td style="color:var(--ink-dim)">–</td>'; continue; }
@@ -107,7 +134,7 @@ export async function renderMonthly(){
     h+='<td class="'+cls(tp)+'" style="font-weight:600">'+(tp>=0?"+":"")+tp.toFixed(0)+'</td></tr>';
   });
   h+="</tbody></table>";
-  $("#heat").innerHTML='<p class="muted" style="margin-bottom:6px">年×月の騰落率（%）</p>'+h;
+  $("#heat").innerHTML='<p class="muted" style="margin-bottom:6px">年×月の騰落率（%）。「半減期から」は直近の半減期からの経過月数で、金色が濃いほど半減期に近い時期です（半減期：2012年11月・2016年7月・2020年5月・2024年4月）</p>'+h;
 }
 
 /* ── 上昇の順番 ── */

@@ -155,8 +155,9 @@ export async function renderKline(){
   }
   if(!all||all.length<10) return;
   const ma25=sma(all,25,k=>k.c), ma75=sma(all,75,k=>k.c);
+  const vma25=sma(all,25,k=>k.v);
   const n=Math.min(state.kzoom,all.length), i0=all.length-n;
-  const view=all.slice(i0), m25=ma25.slice(i0), m75=ma75.slice(i0);
+  const view=all.slice(i0), m25=ma25.slice(i0), m75=ma75.slice(i0), vm25=vma25.slice(i0);
   const fx = state.cur==="jpy"?state.fx:1;
 
   let lo=Infinity,hi=-Infinity;
@@ -166,7 +167,8 @@ export async function renderKline(){
   const PH = H-PT-PB-VOL;
   const X=i=>4+(i+.5)/n*(W-8);
   const Y=p=>PT+(hi-p)/(hi-lo)*PH;
-  const vmax=Math.max.apply(null,view.map(k=>k.v))||1;
+  let vmax=Math.max.apply(null,view.map(k=>k.v))||1;
+  vm25.forEach(v=>{if(v!=null&&v>vmax)vmax=v;});
   const VBASE=H-PB, VY=v=>VBASE-(v/vmax)*VOL;
 
   const g=svgEl("g",{"class":"grid"});
@@ -184,6 +186,13 @@ export async function renderKline(){
       fill:k.c>=k.o?"var(--up)":"var(--down)"}));
   });
   svg.appendChild(vg);
+  // 出来高の25本移動平均（既存の文字色を淡くして重ねる）
+  {
+    let vd="", vstarted=false;
+    vm25.forEach((v,i)=>{ if(v==null)return; vd+=(vstarted?"L":"M")+X(i).toFixed(2)+" "+VY(v).toFixed(2)+" "; vstarted=true; });
+    if(vd) svg.appendChild(svgEl("path",{"class":"series",d:vd,stroke:"var(--ink)",
+      "stroke-width":1,opacity:".55"}));
+  }
 
   if(state.ktype==="candle"){
     view.forEach((k,i)=>{
@@ -239,7 +248,7 @@ async function renderKStatus(all,ma25,ma75,tf){
   box.appendChild(p);
   const l=el("span","badge");
   const unit = tf==="1w"?"週":"日";
-  l.innerHTML='<span style="color:var(--ma25)">━</span> 25'+unit+'線　<span style="color:var(--ma75)">━</span> 75'+unit+'線';
+  l.innerHTML='<span style="color:var(--ma25)">━</span> 25'+unit+'線　<span style="color:var(--ma75)">━</span> 75'+unit+'線　<span style="color:var(--ink);opacity:.55">━</span> 出来高25'+unit+'平均';
   box.appendChild(l);
 }
 
