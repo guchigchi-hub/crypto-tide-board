@@ -1,4 +1,22 @@
 {
-  "generatedAt": "",
-  "topics": []
+  "generatedAt": "2026-08-16",
+  "generatedAtISO": "2026-08-16T11:07:47.923Z",
+  "model": "claude-sonnet-5",
+  "topics": [
+    {
+      "tag": "マクロ/価格",
+      "title": "BTC・ETHともに軟調でレンジ推移",
+      "summary": "BTCは6.2万ドル台、ETHは1,870ドル台で推移し軟調。米上院がClarity Act採決を先送りし規制不透明感も継続（Investing News/CoinDesk）"
+    },
+    {
+      "tag": "規制/コンプライアンス",
+      "title": "Binance、HTXなど16取引所と取引遮断",
+      "summary": "BinanceがEU・英・米の対露制裁対応でHTXやEXMOなど16プラットフォームとの取引処理を8月23日までに段階的に停止（Cointribune/CryptoBriefing）"
+    },
+    {
+      "tag": "オンチェーン/altcoin",
+      "title": "Chainlink急伸、ETH steaking最高更新",
+      "summary": "LINKが週間で5%超上昇し出来高も急増、一方ETH steaking比率は34.4%と過去最高を記録し機関需要を示唆（Altcoin Buzz/CoinMarketCap）"
+    }
+  ]
 }
