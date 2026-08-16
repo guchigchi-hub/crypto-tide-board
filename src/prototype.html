@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>潮目盤 — 暗号資産ダッシュボード</title>
+<style>
+  :root{
+    --ink:#F1EDE3; --ink-dim:#98A2B8;
+    --ground:#0E1626; --panel:#141F35; --panel-2:#18253E;
+    --rule:rgba(241,237,227,.10); --rule-strong:rgba(241,237,227,.22);
+    --up:#F2584B; --down:#4DA3E0; --btc:#E0A93B; --ma25:#F0C24B; --ma75:#7FD4C1;
+    --mincho:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    --gothic:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,"Roboto Mono","Noto Sans Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--gothic);
+    -webkit-font-smoothing:antialiased;font-feature-settings:"palt" 1;line-height:1.6}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 18px 70px}
+
+  .masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;padding-bottom:13px;border-bottom:1px solid var(--rule-strong)}
+  .brand h1{font-family:var(--mincho);font-size:clamp(25px,4.2vw,38px);font-weight:600;
+    letter-spacing:.14em;margin:0}
+  .brand p{margin:4px 0 0;font-size:12px;color:var(--ink-dim);letter-spacing:.06em}
+  .meta{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink-dim)}
+  .meta .dot{width:6px;height:6px;border-radius:50%;background:#3FB27F;box-shadow:0 0 0 3px rgba(63,178,127,.18)}
+  .meta.stale .dot{background:#8A6B2E;box-shadow:0 0 0 3px rgba(138,107,46,.18)}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(14,22,38,.94);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+    margin:0 -18px 22px;padding:9px 18px;overflow-x:auto;white-space:nowrap;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{color:var(--ink-dim);text-decoration:none;font-size:12.5px;letter-spacing:.06em;
+    margin-right:19px;padding-bottom:3px;border-bottom:1px solid transparent;transition:color .15s}
+  nav a:hover,nav a.on{color:var(--ink);border-color:var(--btc)}
+
+  .controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:0 0 24px}
+  .seg{display:flex;border:1px solid var(--rule-strong);border-radius:2px;overflow:hidden}
+  .seg button{appearance:none;background:transparent;border:0;border-right:1px solid var(--rule);
+    color:var(--ink-dim);font-family:var(--gothic);font-size:12.5px;padding:6px 14px;cursor:pointer;
+    letter-spacing:.05em;transition:background .15s,color .15s}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{color:var(--ink);background:rgba(241,237,227,.05)}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground);font-weight:600}
+  .ghost{appearance:none;background:transparent;border:1px solid var(--rule-strong);border-radius:2px;
+    color:var(--ink-dim);font-family:var(--gothic);font-size:12.5px;padding:6px 13px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:color .15s,border-color .15s}
+  .ghost:hover{color:var(--ink);border-color:var(--ink-dim)}
+  .ghost:disabled{opacity:.5;cursor:default}
+  .ghost svg{width:13px;height:13px}
+  .spin{animation:rot 1s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--btc);outline-offset:2px}
+
+  .eyebrow{display:flex;align-items:baseline;gap:11px;margin:0 0 13px;flex-wrap:wrap}
+  .eyebrow h2{font-family:var(--mincho);font-size:17px;font-weight:600;letter-spacing:.15em;margin:0}
+  .eyebrow span{font-size:11.5px;color:var(--ink-dim)}
+  section{margin-bottom:40px;scroll-margin-top:56px}
+
+  .tide{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);
+    border:1px solid var(--rule);border-radius:3px;padding:24px 20px 16px;position:relative;overflow:hidden}
+  .tide::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(90deg,transparent 0 39px,var(--rule) 39px 40px);opacity:.3}
+  .tide-ends{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-dim);
+    letter-spacing:.08em;margin-bottom:18px;position:relative}
+  .tide-track{position:relative;height:112px;margin:0 6px}
+  .tide-axis{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rule-strong)}
+  .tide-zero{position:absolute;top:6px;bottom:6px;width:1px;background:var(--btc);opacity:.75}
+  .tide-zero::after{content:"BTC";position:absolute;top:-2px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--btc);
+    background:var(--panel);padding:0 5px}
+  .pin{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;
+    align-items:center;gap:5px;transition:left .5s cubic-bezier(.4,0,.2,1),top .5s cubic-bezier(.4,0,.2,1)}
+  .pin .tick{width:1px;height:13px;background:currentColor;opacity:.5}
+  .pin .bead{width:11px;height:11px;border-radius:50%;background:currentColor;
+    box-shadow:0 0 0 4px color-mix(in srgb,currentColor 18%,transparent)}
+  .pin .tag{font-family:var(--mono);font-size:11px;white-space:nowrap;color:var(--ink)}
+  .pin .tag b{color:currentColor;font-weight:600}
+  .tide-note{position:relative;margin:14px 0 0;padding-top:11px;border-top:1px solid var(--rule);
+    font-size:12px;color:var(--ink-dim)}
+
+  .chart-card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;padding:18px 16px 12px;position:relative}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-dim);
+    border:1px solid var(--rule);border-radius:2px;padding:3px 9px;cursor:pointer;background:transparent;
+    font-family:var(--gothic);transition:opacity .15s,border-color .15s}
+  .lg .sw{width:14px;height:2px;background:currentColor}
+  .lg[aria-pressed="false"]{opacity:.35}
+  .lg:hover{border-color:var(--ink-dim)}
+  .plot{position:relative;width:100%;height:300px}
+  .plot svg{width:100%;height:100%;display:block;overflow:visible}
+  .grid line{stroke:var(--rule);stroke-width:1}
+  .zeroline{stroke:var(--rule-strong);stroke-width:1;stroke-dasharray:3 3}
+  path.series{fill:none;stroke-width:1.7;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+  .ylab{font-family:var(--mono);font-size:10px;fill:var(--ink-dim)}
+  .xaxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;
+    color:var(--ink-dim);margin-top:5px}
+  .cross{position:absolute;top:0;bottom:0;width:1px;background:var(--rule-strong);pointer-events:none;display:none}
+  .tip{position:absolute;pointer-events:none;display:none;z-index:5;background:rgba(9,15,26,.97);
+    border:1px solid var(--rule-strong);border-radius:2px;padding:8px 10px;font-size:11.5px;min-width:140px}
+  .tip .t-date{color:var(--ink-dim);font-family:var(--mono);font-size:10px;margin-bottom:5px}
+  .tip .t-row{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono)}
+
+  .grid5{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:11px}
+  .coin{background:var(--panel);border:1px solid var(--rule);border-radius:3px;padding:14px 15px 9px;
+    position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+  .coin:hover{border-color:var(--rule-strong);transform:translateY(-1px)}
+  .coin .rail{position:absolute;left:0;top:0;bottom:0;width:2px;background:currentColor}
+  .c-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .c-name{font-family:var(--mincho);font-size:14.5px;letter-spacing:.06em}
+  .c-sym{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);letter-spacing:.1em}
+  .c-price{font-family:var(--mono);font-size:21px;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+  .c-delta{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .c-spark{height:44px;margin-top:7px}
+  .c-spark svg{width:100%;height:100%;display:block}
+  .c-spark path{fill:none;stroke-width:1.5;vector-effect:non-scaling-stroke}
+  .c-foot{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-dim);
+    font-family:var(--mono);border-top:1px solid var(--rule);margin-top:7px;padding-top:6px}
+  .up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--ink-dim)}
+
+  .mtf{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:13px}
+  .status{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0;padding-top:11px;border-top:1px solid var(--rule)}
+  .badge{font-size:11.5px;font-family:var(--mono);border:1px solid var(--rule);border-radius:2px;
+    padding:4px 9px;color:var(--ink-dim)}
+  .badge b{font-family:var(--gothic);font-weight:600}
+  .badge.gc{border-color:rgba(242,88,75,.5);color:var(--up)}
+  .badge.dc{border-color:rgba(77,163,224,.5);color:var(--down)}
+
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--panel)}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:540px}
+  th,td{padding:8px 11px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap}
+  th{font-family:var(--gothic);font-weight:600;color:var(--ink-dim);font-size:11.5px;
+    letter-spacing:.05em;background:var(--panel-2);position:sticky;top:0}
+  td{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left;font-family:var(--gothic)}
+  tbody tr:hover{background:rgba(241,237,227,.035)}
+  tbody tr:last-child td{border-bottom:0}
+  tr.best td{background:rgba(242,88,75,.07)}
+  tr.worst td{background:rgba(77,163,224,.07)}
+  .bar{display:inline-block;height:7px;border-radius:1px;vertical-align:middle;margin-right:6px}
+
+  .heat{overflow-x:auto;margin-top:14px}
+  .heat table{min-width:660px;font-size:11px}
+  .heat td,.heat th{padding:4px 5px;text-align:center;border:1px solid rgba(14,22,38,.85)}
+  .heat th:first-child,.heat td:first-child{text-align:left;position:sticky;left:0;background:var(--panel);z-index:1}
+
+  .topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
+  .topic{background:var(--panel);border:1px solid var(--rule);border-left:2px solid var(--btc);
+    border-radius:3px;padding:14px 15px}
+  .topic h3{font-family:var(--mincho);font-size:14.5px;margin:0 0 6px;letter-spacing:.05em;font-weight:600}
+  .topic p{margin:0;font-size:12.5px;color:var(--ink-dim);line-height:1.75}
+  .topic .tag{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--btc);
+    border:1px solid rgba(224,169,59,.4);border-radius:2px;padding:1px 6px;margin-bottom:8px}
+  .topic.live{border-left-color:var(--ma75)}
+  .topic.live .tag{color:var(--ma75);border-color:rgba(127,212,193,.4)}
+
+  .notice{border:1px solid var(--rule-strong);border-left:2px solid var(--btc);border-radius:2px;
+    background:var(--panel);padding:13px 15px;font-size:13px;display:none;margin-bottom:18px}
+  .notice.show{display:block}
+  .notice b{display:block;font-family:var(--mincho);letter-spacing:.06em;margin-bottom:4px;font-weight:600}
+  .notice p{margin:0 0 9px;color:var(--ink-dim);font-size:12.5px}
+  .sk{background:linear-gradient(90deg,var(--panel) 25%,var(--panel-2) 50%,var(--panel) 75%);
+    background-size:200% 100%;animation:sh 1.4s ease-in-out infinite;border-radius:2px}
+  @keyframes sh{to{background-position:-200% 0}}
+  .sk-card{height:152px;border:1px solid var(--rule)}
+  .muted{font-size:11.5px;color:var(--ink-dim);margin:9px 0 0;line-height:1.8}
+  .big{font-family:var(--mono);font-size:34px;letter-spacing:-.01em}
+  .dom-head{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;margin-bottom:14px}
+  .dom-head small{display:block;font-size:11px;color:var(--ink-dim);font-family:var(--gothic)}
+
+  footer{border-top:1px solid var(--rule);padding-top:13px;font-size:11.5px;color:var(--ink-dim);
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+  @media (max-width:600px){
+    .wrap{padding:15px 12px 50px}
+    .tide-track{height:146px}
+    .plot{height:250px}
+    .big{font-size:28px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand">
+      <h1>潮目盤</h1>
+      <p>BTC・ETH・XRP・BNB・SOL ／ 資金の流れと統計を一目で</p>
+    </div>
+    <div class="meta" id="meta"><span class="dot"></span><span id="updated">読み込み中</span></div>
+  </header>
+
+  <nav id="nav">
+    <a href="#s-tide">潮目</a><a href="#s-chart">ローソク足</a><a href="#s-dom">ドミナンス</a>
+    <a href="#s-month">月別統計</a><a href="#s-rot">上昇の順番</a><a href="#s-topic">注目テーマ</a>
+  </nav>
+
+  <div class="controls">
+    <div class="seg" id="period" role="group" aria-label="表示期間">
+      <button data-p="24h" aria-pressed="false">24時間</button>
+      <button data-p="7d" aria-pressed="true">7日</button>
+      <button data-p="30d" aria-pressed="false">30日</button>
+      <button data-p="1y" aria-pressed="false">1年</button>
+    </div>
+    <div class="seg" id="cur" role="group" aria-label="表示通貨">
+      <button data-c="jpy" aria-pressed="true">円</button>
+      <button data-c="usd" aria-pressed="false">ドル</button>
+    </div>
+    <button class="ghost" id="reload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>更新
+    </button>
+  </div>
+
+  <div class="notice" id="notice"></div>
+
+  <section id="s-tide">
+    <div class="eyebrow"><h2>対ビットコイン潮位</h2>
+      <span>ビットコインを0として、どこへ資金が回っているか</span></div>
+    <div class="tide">
+      <div class="tide-ends"><span>← 資金が引く（BTCに劣後）</span><span>資金が満ちる（BTCに優越）→</span></div>
+      <div class="tide-track" id="tide"><div class="tide-axis"></div><div class="tide-zero" style="left:50%"></div></div>
+      <p class="tide-note" id="tide-note">読み込み中です。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><h2>銘柄一覧</h2><span>赤＝上昇／青＝下落（日本式の色）</span></div>
+    <div class="grid5" id="cards"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><h2>重ね合わせ</h2><span>期間の始点を0%に揃えて比較。凡例クリックで表示切替</span></div>
+    <div class="chart-card">
+      <div class="legend" id="legend"></div>
+      <div class="plot" id="plot">
+        <svg id="svg" preserveAspectRatio="none" viewBox="0 0 1000 300"></svg>
+        <div class="cross" id="cross"></div><div class="tip" id="tip"></div>
+      </div>
+      <div class="xaxis"><span id="x0"></span><span id="x1"></span><span id="x2"></span></div>
+    </div>
+  </section>
+
+  <section id="s-chart">
+    <div class="eyebrow"><h2>ローソク足 ／ マルチタイムフレーム</h2>
+      <span>25本線（短期）と75本線（長期）付き。日足と週足を切り替えて確認</span></div>
+    <div class="chart-card">
+      <div class="mtf">
+        <div class="seg" id="ksym" role="group" aria-label="銘柄">
+          <button data-s="BTC" aria-pressed="true">BTC</button><button data-s="ETH" aria-pressed="false">ETH</button>
+          <button data-s="XRP" aria-pressed="false">XRP</button><button data-s="BNB" aria-pressed="false">BNB</button>
+          <button data-s="SOL" aria-pressed="false">SOL</button>
+        </div>
+        <div class="seg" id="ktf" role="group" aria-label="時間軸">
+          <button data-t="1d" aria-pressed="true">日足</button><button data-t="1w" aria-pressed="false">週足</button>
+        </div>
+        <div class="seg" id="ktype" role="group" aria-label="表示形式">
+          <button data-k="candle" aria-pressed="true">ローソク</button><button data-k="line" aria-pressed="false">ライン</button>
+        </div>
+        <div class="seg" id="kzoom" role="group" aria-label="表示本数">
+          <button data-z="60" aria-pressed="false">60本</button><button data-z="120" aria-pressed="true">120本</button>
+          <button data-z="250" aria-pressed="false">250本</button>
+        </div>
+      </div>
+      <div class="plot" id="kplot" style="height:380px">
+        <svg id="ksvg" preserveAspectRatio="none" viewBox="0 0 1000 380"></svg>
+        <div class="cross" id="kcross"></div><div class="tip" id="ktip"></div>
+      </div>
+      <div class="xaxis" id="kxaxis"></div>
+      <div class="status" id="kstatus"></div>
+    </div>
+    <p class="muted">価格はUSDT建て。円表示のときはビットコインの円／ドル比率で概算換算しています。25本線と75本線は、日足なら25日線・75日線、週足なら25週線・75週線です。</p>
+  </section>
+
+  <section id="s-dom">
+    <div class="eyebrow"><h2>ビットコインドミナンス</h2>
+      <span>市場全体の時価総額に占めるBTCの割合。低下＝アルトへ資金が回る局面</span></div>
+    <div class="chart-card">
+      <div class="dom-head">
+        <div><span class="big" id="dom-now">—</span><small>現在のドミナンス（ライブ）</small></div>
+        <div><span class="big" id="dom-eth" style="font-size:22px">—</span><small>イーサリアムの割合</small></div>
+        <div><span class="big" id="dom-cap" style="font-size:22px">—</span><small>暗号資産市場の時価総額</small></div>
+      </div>
+      <div class="plot" id="dplot" style="height:260px">
+        <svg id="dsvg" preserveAspectRatio="none" viewBox="0 0 1000 260"></svg>
+      </div>
+      <div class="xaxis" id="dxaxis"></div>
+    </div>
+    <p class="muted">推移は2015年以降の節目ごとの概算値（参考データ）に、直近のライブ値をつないだ折れ線です。無料APIでは過去のドミナンス実測値が配信されないため、水準の目安としてご覧ください。正確な時系列はTradingViewの銘柄コード「BTC.D」で確認できます。</p>
+  </section>
+
+  <section id="s-month">
+    <div class="eyebrow"><h2>ビットコインの月別成績</h2><span id="month-range">集計中</span></div>
+    <div class="tbl-wrap"><table id="month-tbl"><tbody><tr><td>集計中です…</td></tr></tbody></table></div>
+    <p class="muted" id="month-note"></p>
+    <div class="heat" id="heat"></div>
+  </section>
+
+  <section id="s-rot">
+    <div class="eyebrow"><h2>ビットコイン→アルトの順で上がった確率</h2>
+      <span>BTCが週足で+3%以上上昇した週の「翌週」を検証</span></div>
+    <div class="tbl-wrap"><table id="rot-tbl"><tbody><tr><td>集計中です…</td></tr></tbody></table></div>
+    <p class="muted" id="rot-note"></p>
+  </section>
+
+  <section id="s-topic">
+    <div class="eyebrow"><h2>注目テーマと今日のトピック</h2>
+      <span id="topic-date"></span>
+      <button class="ghost" id="topic-refresh" style="margin-left:auto">今日のトピックを更新</button></div>
+    <div class="topics" id="topics"></div>
+    <p class="muted">テーマは2026年8月時点の市場材料を整理したものです。特定銘柄の売買を勧めるものではありません。</p>
+  </section>
+
+  <footer>
+    <span>価格：CoinGecko ／ ローソク足：Binance（取得できない場合はBybit）</span>
+    <span>情報提供のみを目的としています。投資判断はご自身の責任で。</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const CG = "https://api.coingecko.com/api/v3";
+const COINS = {
+  bitcoin:     {sym:"BTC", ja:"ビットコイン",       color:"#E0A93B"},
+  ethereum:    {sym:"ETH", ja:"イーサリアム",       color:"#8C8CF0"},
+  ripple:      {sym:"XRP", ja:"リップル",           color:"#5FD3BC"},
+  binancecoin: {sym:"BNB", ja:"ビルドアンドビルド", color:"#F0C24B"},
+  solana:      {sym:"SOL", ja:"ソラナ",             color:"#B98CF5"}
+};
+const IDS = Object.keys(COINS);
+const SYM2ID = {BTC:"bitcoin",ETH:"ethereum",XRP:"ripple",BNB:"binancecoin",SOL:"solana"};
+const PERIODS = {
+  "24h":{label:"24時間",days:1,  pct:"price_change_percentage_24h_in_currency"},
+  "7d" :{label:"7日",   days:7,  pct:"price_change_percentage_7d_in_currency"},
+  "30d":{label:"30日",  days:30, pct:"price_change_percentage_30d_in_currency"},
+  "1y" :{label:"1年",   days:365,pct:"price_change_percentage_1y_in_currency"}
+};
+const MONTHS = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+
+const DOM_REF = [
+  ["2015-01",87],["2015-07",85],["2016-01",91],["2016-06",78],["2016-12",88],
+  ["2017-03",73],["2017-06",39],["2017-09",49],["2017-12",39],
+  ["2018-03",44],["2018-06",42],["2018-09",55],["2018-12",52],
+  ["2019-03",52],["2019-06",61],["2019-09",68],["2019-12",68],
+  ["2020-03",64],["2020-06",65],["2020-09",57],["2020-12",70],
+  ["2021-02",61],["2021-05",43],["2021-08",47],["2021-11",42],["2021-12",40],
+  ["2022-03",42],["2022-06",44],["2022-09",39],["2022-12",40],
+  ["2023-03",45],["2023-06",47],["2023-09",48],["2023-12",51],
+  ["2024-03",54],["2024-06",54],["2024-09",57],["2024-12",57],
+  ["2025-03",61],["2025-06",65],["2025-08",59],["2025-10",58],["2025-12",58],
+  ["2026-02",59],["2026-04",60],["2026-05",60.5],["2026-07",57]
+];
+
+const THEMES = [
+  {tag:"RWA", h:"実物資産のトークン化",
+   p:"米国債やマネー・マーケット・ファンド、私募クレジットをチェーン上で扱う分野。運用会社の参入で機関資金の受け皿になりつつあり、担保としての使い勝手が焦点になっています。"},
+  {tag:"STABLE", h:"ステーブルコイン決済",
+   p:"送金・決済・DeFi担保の共通レールとして拡大中。規制の明確化が進むほど、発行体や決済網を担うチェーンに取引が集まりやすい構図です。"},
+  {tag:"AI×DePIN", h:"分散型の計算資源",
+   p:"GPU・ストレージ・データを分散ネットワークで調達する分野。AI需要の裏側にあたるインフラ側が中心で、名前にAIが付くだけの銘柄とは分けて見る必要があります。"},
+  {tag:"ETF", h:"現物ETFと機関投資家",
+   p:"2026年は承認プロセスの短縮で新規上場が相次ぐ見通し。一方で資金は主要銘柄に集中しやすく、ETFの器に入った資金はアルトへ回りにくいという指摘もあります。"},
+  {tag:"PERP", h:"予測市場とPerp DEX",
+   p:"板をチェーン上に置く取引所と、事象の確率を値付けする予測市場。手数料という実需が読める数少ない領域として資金が向かいやすい分野です。"},
+  {tag:"CYCLE", h:"サイクルの位置",
+   p:"2025年10月の高値から半値近い調整が続き、ドミナンスは56〜60%台で推移。過去のアルト優位局面は、ドミナンスが50〜54%を割ってから定着する例が多いとされています。"}
+];
+
+const $ = s => document.querySelector(s);
+const el = (t,c)=>{const n=document.createElement(t);if(c)n.className=c;return n;};
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (t,a)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
+const mean = a => a.reduce((x,y)=>x+y,0)/a.length;
+const median = a => {const s=a.slice().sort((x,y)=>x-y),h=s.length>>1;
+  return s.length%2?s[h]:(s[h-1]+s[h])/2;};
+
+const mem = {};
+const store = {
+  async get(k){
+    try{ if(window.storage){const r=await window.storage.get(k);return r?r.value:null;} }catch(e){}
+    try{ return localStorage.getItem(k); }catch(e){}
+    return k in mem?mem[k]:null;
+  },
+  async set(k,v){
+    mem[k]=v;
+    try{ if(window.storage){await window.storage.set(k,v);return;} }catch(e){}
+    try{ localStorage.setItem(k,v); }catch(e){}
+  }
+};
+
+const state = {
+  period:"7d", cur:"jpy", markets:{}, hidden:{}, series:{},
+  updatedAt:null, loading:false, fx:1,
+  ksym:"BTC", ktf:"1d", ktype:"candle", kzoom:120, klines:{}
+};
+
+async function getJSON(url,ms){
+  const ctl = new AbortController();
+  const to = setTimeout(()=>ctl.abort(), ms||15000);
+  try{
+    const res = await fetch(url,{headers:{accept:"application/json"},signal:ctl.signal});
+    if(res.status===429){const e=new Error("rate");e.code=429;throw e;}
+    if(!res.ok){const e=new Error("http"+res.status);e.code=res.status;throw e;}
+    return await res.json();
+  } finally { clearTimeout(to); }
+}
+
+function fmtPrice(v,cur){
+  cur = cur||state.cur;
+  if(v==null||!isFinite(v)) return "—";
+  const s = cur==="jpy"?"¥":"$";
+  const d = cur==="jpy" ? (v>=10000?0:v>=100?1:v>=1?2:4) : (v>=1000?0:v>=1?2:4);
+  return s+v.toLocaleString("ja-JP",{minimumFractionDigits:d,maximumFractionDigits:d});
+}
+function fmtPct(v){
+  if(v==null||!isFinite(v)) return "—";
+  return (v>0?"+":"")+v.toFixed(2)+"%";
+}
+const cls = v => (v==null||!isFinite(v))?"flat":v>0?"up":v<0?"down":"flat";
+const tone = v => (v==null||!isFinite(v))?"var(--ink-dim)":v>=0?"var(--up)":"var(--down)";
+function fmtCap(v){
+  if(v==null) return "—";
+  if(state.cur==="jpy") return v>=1e12?(v/1e12).toFixed(2)+"兆円":Math.round(v/1e8).toLocaleString("ja-JP")+"億円";
+  return "$"+(v/1e9).toFixed(1)+"B";
+}
+function fmtDate(ms,p){
+  const d=new Date(ms), P=p||state.period;
+  if(P==="24h") return (d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":00";
+  if(P==="1y")  return d.getFullYear()+"/"+(d.getMonth()+1);
+  return (d.getMonth()+1)+"/"+d.getDate();
+}
+
+/* ── CoinGecko ── */
+async function loadMarkets(){
+  const url = CG+"/coins/markets?vs_currency="+state.cur+"&ids="+IDS.join(",")
+    +"&order=market_cap_desc&sparkline=true&price_change_percentage=24h,7d,30d,1y";
+  const rows = await getJSON(url);
+  const map={}; rows.forEach(r=>map[r.id]=r);
+  state.markets = map;
+  state.updatedAt = Date.now();
+  if(state.cur==="jpy" && map.bitcoin){
+    try{
+      const u = await getJSON(CG+"/simple/price?ids=bitcoin&vs_currencies=usd");
+      if(u.bitcoin && u.bitcoin.usd) state.fx = map.bitcoin.current_price/u.bitcoin.usd;
+    }catch(e){}
+  } else state.fx = 1;
+}
+async function loadSeries(){
+  const p=PERIODS[state.period];
+  if(state.period==="24h"||state.period==="7d") return;
+  const need = IDS.filter(id=>!state.series[state.cur+"|"+p.days+"|"+id] && state.markets[id]);
+  for(let i=0;i<need.length;i++){
+    const url=CG+"/coins/"+need[i]+"/market_chart?vs_currency="+state.cur+"&days="+p.days
+      +(p.days>90?"&interval=daily":"");
+    try{ const d=await getJSON(url); state.series[state.cur+"|"+p.days+"|"+need[i]]=d.prices||[]; }
+    catch(e){ if(e.code===429) throw e; }
+    if(i<need.length-1) await new Promise(r=>setTimeout(r,240));
+  }
+}
+function seriesFor(id){
+  const p=PERIODS[state.period], m=state.markets[id];
+  if(state.period==="24h"||state.period==="7d"){
+    const sp = m && m.sparkline_in_7d && m.sparkline_in_7d.price;
+    if(!sp||!sp.length) return null;
+    const arr = state.period==="24h"?sp.slice(-24):sp;
+    const end = state.updatedAt||Date.now(), step=3600e3, st=end-(arr.length-1)*step;
+    return arr.map((v,i)=>[st+i*step,v]);
+  }
+  return state.series[state.cur+"|"+p.days+"|"+id]||null;
+}
+
+/* ── ローソク足データ ── */
+async function klines(sym,interval,limit){
+  const key=sym+"|"+interval;
+  if(state.klines[key]) return state.klines[key];
+  let out=null;
+  try{
+    const r = await getJSON("https://api.binance.com/api/v3/klines?symbol="+sym+"USDT&interval="+interval+"&limit="+limit);
+    out = r.map(k=>({t:k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
+  }catch(e){
+    const map={"1d":"D","1w":"W","1M":"M"};
+    const r = await getJSON("https://api.bybit.com/v5/market/kline?category=spot&symbol="+sym
+      +"USDT&interval="+map[interval]+"&limit="+Math.min(limit,1000));
+    const list=(r.result&&r.result.list)||[];
+    out = list.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]})).reverse();
+  }
+  state.klines[key]=out;
+  return out;
+}
+function sma(arr,n,pick){
+  const out=new Array(arr.length).fill(null); let s=0;
+  for(let i=0;i<arr.length;i++){
+    s += pick(arr[i]);
+    if(i>=n) s -= pick(arr[i-n]);
+    if(i>=n-1) out[i]=s/n;
+  }
+  return out;
+}
+
+/* ── 潮位計 ── */
+function renderTide(){
+  const track=$("#tide");
+  track.querySelectorAll(".pin").forEach(n=>n.remove());
+  const pct=PERIODS[state.period].pct, btc=state.markets.bitcoin;
+  const bp = btc?btc[pct]:null;
+  if(bp==null){ $("#tide-note").textContent="ビットコインの騰落率を取得できませんでした。"; return; }
+  const rows = IDS.map(id=>{
+    const m=state.markets[id];
+    return (m&&m[pct]!=null)?{id:id,rel:m[pct]-bp,abs:m[pct]}:null;
+  }).filter(Boolean).sort((a,b)=>a.rel-b.rel);
+  const max=Math.max(6,...rows.map(r=>Math.abs(r.rel)));
+  const lanes=[];
+  rows.forEach(r=>{
+    const x=50+(r.rel/max)*44;
+    let lane=0; while(lanes[lane]!=null&&Math.abs(lanes[lane]-x)<13) lane++;
+    lanes[lane]=x;
+    const meta=COINS[r.id], pin=el("div","pin");
+    pin.style.color = r.id==="bitcoin"?"var(--btc)":meta.color;
+    pin.style.left = x+"%";
+    pin.style.top = (lane%2===0?50-14-lane*11:50+16+(lane-1)*11)+"%";
+    pin.innerHTML = '<span class="tag">'+meta.sym+' <b>'+(r.rel>0?"+":"")+r.rel.toFixed(1)+'</b></span>'
+      +'<span class="bead"></span><span class="tick"></span>';
+    pin.title = meta.ja+"："+PERIODS[state.period].label+"で "+fmtPct(r.abs)
+      +"（BTC比 "+(r.rel>0?"+":"")+r.rel.toFixed(1)+"pt）";
+    track.appendChild(pin);
+  });
+  const others=rows.filter(r=>r.id!=="bitcoin");
+  const ahead=others.filter(r=>r.rel>0).length;
+  const lead=rows[rows.length-1], lag=rows[0];
+  let s=PERIODS[state.period].label+"のビットコインは "+fmtPct(bp)+"。アルト"+others.length
+    +"銘柄のうち"+ahead+"銘柄がビットコインを上回っています。";
+  if(lead&&lead.id!=="bitcoin") s+="先行は"+COINS[lead.id].ja+"（BTC比 +"+lead.rel.toFixed(1)+"pt）、";
+  if(lag&&lag.id!=="bitcoin") s+="出遅れは"+COINS[lag.id].ja+"（BTC比 "+lag.rel.toFixed(1)+"pt）です。";
+  $("#tide-note").textContent=s;
+}
+
+/* ── カード ── */
+function sparkPath(v,w,h){
+  const lo=Math.min.apply(null,v),hi=Math.max.apply(null,v),sp=(hi-lo)||1;
+  return v.map((x,i)=>(i?"L":"M")+((i/(v.length-1))*w).toFixed(2)+" "+(h-((x-lo)/sp)*h).toFixed(2)).join(" ");
+}
+function renderCards(){
+  const box=$("#cards"); box.innerHTML="";
+  const pk=PERIODS[state.period].pct;
+  IDS.slice().sort((a,b)=>((state.markets[b]||{}).market_cap||0)-((state.markets[a]||{}).market_cap||0))
+  .forEach(id=>{
+    const m=state.markets[id], meta=COINS[id], c=el("div","coin");
+    c.style.color = id==="bitcoin"?"var(--btc)":meta.color;
+    if(!m){
+      c.innerHTML='<div class="rail"></div><div class="c-head"><span class="c-name">'+meta.ja
+        +'</span><span class="c-sym">'+meta.sym+'</span></div><div class="c-price">—</div>';
+      box.appendChild(c); return;
+    }
+    const chg=m[pk], s=seriesFor(id), vals=s?s.map(p=>p[1]):null;
+    const spark = vals&&vals.length>1
+      ? '<svg viewBox="0 0 200 44" preserveAspectRatio="none"><path d="'+sparkPath(vals,200,44)+'" stroke="'+tone(chg)+'"/></svg>' : "";
+    c.innerHTML = '<div class="rail"></div>'
+      +'<div class="c-head"><span class="c-name">'+meta.ja+'</span><span class="c-sym">'+meta.sym+'</span></div>'
+      +'<div class="c-price">'+fmtPrice(m.current_price)+'</div>'
+      +'<div class="c-delta '+cls(chg)+'">'+fmtPct(chg)+'　<span style="color:var(--ink-dim)">'
+      +PERIODS[state.period].label+'</span></div>'
+      +'<div class="c-spark">'+spark+'</div>'
+      +'<div class="c-foot"><span>24h '+fmtPct(m.price_change_percentage_24h_in_currency)+'</span><span>'
+      +fmtCap(m.market_cap)+'</span></div>';
+    box.appendChild(c);
+  });
+}
+
+/* ── 重ね合わせ ── */
+function renderOverlay(){
+  const svg=$("#svg"), W=1000,H=300,P=8;
+  const data=IDS.filter(id=>!state.hidden[id]).map(id=>({id:id,pts:seriesFor(id)})).filter(d=>d.pts&&d.pts.length>1);
+  svg.innerHTML="";
+  if(!data.length){$("#x0").textContent=$("#x1").textContent=$("#x2").textContent="";return;}
+  const norm=data.map(d=>({id:d.id,v:d.pts.map(p=>[p[0],(p[1]/d.pts[0][1]-1)*100])}));
+  let lo=Infinity,hi=-Infinity,t0=Infinity,t1=-Infinity;
+  norm.forEach(s=>s.v.forEach(function(pt){
+    const t=pt[0],y=pt[1];
+    if(y<lo)lo=y; if(y>hi)hi=y; if(t<t0)t0=t; if(t>t1)t1=t;
+  }));
+  const sp=Math.max(hi-lo,1); lo-=sp*.12; hi+=sp*.12;
+  const X=t=>P+(t-t0)/(t1-t0)*(W-P*2), Y=y=>P+(hi-y)/(hi-lo)*(H-P*2);
+  const g=svgEl("g",{"class":"grid"});
+  for(let i=0;i<=4;i++){
+    const y=lo+(hi-lo)*i/4;
+    g.appendChild(svgEl("line",{x1:0,x2:W,y1:Y(y),y2:Y(y)}));
+    const t=svgEl("text",{"class":"ylab",x:4,y:Y(y)-4});
+    t.textContent=(y>0?"+":"")+y.toFixed(0)+"%"; g.appendChild(t);
+  }
+  svg.appendChild(g);
+  if(lo<0&&hi>0) svg.appendChild(svgEl("line",{"class":"zeroline",x1:0,x2:W,y1:Y(0),y2:Y(0)}));
+  norm.forEach(s=>{
+    const d=s.v.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(2)+" "+Y(p[1]).toFixed(2)).join(" ");
+    svg.appendChild(svgEl("path",{"class":"series",d:d,
+      stroke:s.id==="bitcoin"?"var(--btc)":COINS[s.id].color,
+      "stroke-width":s.id==="bitcoin"?2.4:1.7}));
+  });
+  $("#x0").textContent=fmtDate(t0); $("#x1").textContent=fmtDate((t0+t1)/2); $("#x2").textContent=fmtDate(t1);
+  hookOverlayHover(norm,t0,t1);
+}
+function hookOverlayHover(norm,t0,t1){
+  const plot=$("#plot"),cross=$("#cross"),tip=$("#tip");
+  plot.onpointerleave=function(){cross.style.display="none";tip.style.display="none";};
+  plot.onpointermove=function(ev){
+    const r=plot.getBoundingClientRect();
+    const rel=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)), t=t0+rel*(t1-t0);
+    cross.style.display="block"; cross.style.left=(rel*r.width)+"px";
+    const rows=norm.map(s=>{
+      let b=s.v[0],bd=Infinity;
+      for(let i=0;i<s.v.length;i++){const d=Math.abs(s.v[i][0]-t);if(d<bd){bd=d;b=s.v[i];}}
+      return {id:s.id,y:b[1],t:b[0]};
+    }).sort((a,b)=>b.y-a.y);
+    tip.innerHTML='<div class="t-date">'+fmtDate(rows[0]?rows[0].t:t)+'</div>'+rows.map(r=>{
+      const c=r.id==="bitcoin"?"var(--btc)":COINS[r.id].color;
+      return '<div class="t-row"><span style="color:'+c+'">'+COINS[r.id].sym+'</span><span class="'
+        +cls(r.y)+'">'+fmtPct(r.y)+'</span></div>';
+    }).join("");
+    tip.style.display="block";
+    tip.style.left=Math.min(r.width-tip.offsetWidth-4,Math.max(4,rel*r.width+12))+"px";
+    tip.style.top="10px";
+  };
+}
+function renderLegend(){
+  const box=$("#legend"); box.innerHTML="";
+  IDS.forEach(id=>{
+    const b=el("button","lg");
+    b.setAttribute("aria-pressed",state.hidden[id]?"false":"true");
+    b.style.color = id==="bitcoin"?"var(--btc)":COINS[id].color;
+    b.innerHTML='<span class="sw"></span><span style="color:var(--ink)">'+COINS[id].sym+'</span>';
+    b.onclick=function(){state.hidden[id]=!state.hidden[id];renderLegend();renderOverlay();};
+    box.appendChild(b);
+  });
+}
+
+/* ── ローソク足 ── */
+async function renderKline(){
+  const svg=$("#ksvg"), W=1000,H=380, PT=10, PB=8, VOL=44;
+  const sym=state.ksym, tf=state.ktf;
+  svg.innerHTML=""; $("#kxaxis").innerHTML="";
+  let all;
+  try{ all = await klines(sym,tf,1000); }
+  catch(e){
+    $("#kstatus").innerHTML='<span class="badge">ローソク足データを取得できませんでした。時間をおいて「更新」を押してください。</span>';
+    return;
+  }
+  if(!all||all.length<10) return;
+  const ma25=sma(all,25,k=>k.c), ma75=sma(all,75,k=>k.c);
+  const n=Math.min(state.kzoom,all.length), i0=all.length-n;
+  const view=all.slice(i0), m25=ma25.slice(i0), m75=ma75.slice(i0);
+  const fx = state.cur==="jpy"?state.fx:1;
+
+  let lo=Infinity,hi=-Infinity;
+  view.forEach(k=>{if(k.l<lo)lo=k.l;if(k.h>hi)hi=k.h;});
+  [m25,m75].forEach(a=>a.forEach(v=>{if(v!=null){if(v<lo)lo=v;if(v>hi)hi=v;}}));
+  const pad=(hi-lo)*.06; lo-=pad; hi+=pad;
+  const PH = H-PT-PB-VOL;
+  const X=i=>4+(i+.5)/n*(W-8);
+  const Y=p=>PT+(hi-p)/(hi-lo)*PH;
+  const vmax=Math.max.apply(null,view.map(k=>k.v))||1;
+  const VBASE=H-PB, VY=v=>VBASE-(v/vmax)*VOL;
+
+  const g=svgEl("g",{"class":"grid"});
+  for(let i=0;i<=4;i++){
+    const p=lo+(hi-lo)*i/4;
+    g.appendChild(svgEl("line",{x1:0,x2:W,y1:Y(p),y2:Y(p)}));
+    const t=svgEl("text",{"class":"ylab",x:4,y:Y(p)-4}); t.textContent=fmtPrice(p*fx); g.appendChild(t);
+  }
+  svg.appendChild(g);
+
+  const bw=Math.max(1,(W-8)/n*.62);
+  const vg=svgEl("g",{opacity:".35"});
+  view.forEach((k,i)=>{
+    vg.appendChild(svgEl("rect",{x:X(i)-bw/2,y:VY(k.v),width:bw,height:VBASE-VY(k.v),
+      fill:k.c>=k.o?"var(--up)":"var(--down)"}));
+  });
+  svg.appendChild(vg);
+
+  if(state.ktype==="candle"){
+    view.forEach((k,i)=>{
+      const col=k.c>=k.o?"var(--up)":"var(--down)";
+      svg.appendChild(svgEl("line",{x1:X(i),x2:X(i),y1:Y(k.h),y2:Y(k.l),stroke:col,
+        "stroke-width":1,"vector-effect":"non-scaling-stroke"}));
+      const top=Y(Math.max(k.o,k.c)), hh=Math.max(1,Math.abs(Y(k.o)-Y(k.c)));
+      svg.appendChild(svgEl("rect",{x:X(i)-bw/2,y:top,width:bw,height:hh,fill:col}));
+    });
+  }else{
+    const d=view.map((k,i)=>(i?"L":"M")+X(i).toFixed(2)+" "+Y(k.c).toFixed(2)).join(" ");
+    svg.appendChild(svgEl("path",{"class":"series",d:d,stroke:"var(--ink)","stroke-width":1.8}));
+  }
+  [[m25,"var(--ma25)"],[m75,"var(--ma75)"]].forEach(pair=>{
+    const a=pair[0], col=pair[1];
+    let d="", started=false;
+    a.forEach((v,i)=>{ if(v==null)return; d+=(started?"L":"M")+X(i).toFixed(2)+" "+Y(v).toFixed(2)+" "; started=true; });
+    if(d) svg.appendChild(svgEl("path",{"class":"series",d:d,stroke:col,"stroke-width":1.5}));
+  });
+
+  const ax=$("#kxaxis");
+  [0,Math.floor(n/2),n-1].forEach(i=>{
+    const s=el("span"), d=new Date(view[i].t);
+    s.textContent=d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate();
+    ax.appendChild(s);
+  });
+
+  renderKStatus(all,ma25,ma75,tf);
+  hookKHover(view,m25,m75,fx,X,n);
+}
+
+async function renderKStatus(all,ma25,ma75,tf){
+  const box=$("#kstatus"); box.innerHTML="";
+  const last=all.length-1;
+  function badge(label,a,b,extra){
+    const s=el("span","badge "+(a>b?"gc":"dc"));
+    s.innerHTML="<b>"+label+"</b> 25"+(a>b?"＞":"＜")+"75 "+(a>b?"上向き":"下向き")+(extra||"");
+    return s;
+  }
+  const curName = tf==="1d"?"日足":"週足";
+  if(ma25[last]!=null&&ma75[last]!=null){
+    const diff=(ma25[last]/ma75[last]-1)*100;
+    box.appendChild(badge(curName,ma25[last],ma75[last],"（乖離 "+(diff>0?"+":"")+diff.toFixed(1)+"%）"));
+  }
+  const other = tf==="1d"?"1w":"1d";
+  try{
+    const o=await klines(state.ksym,other,1000);
+    const a=sma(o,25,k=>k.c), b=sma(o,75,k=>k.c), L=o.length-1;
+    if(a[L]!=null&&b[L]!=null) box.appendChild(badge(other==="1d"?"日足":"週足",a[L],b[L],""));
+  }catch(e){}
+  const p=el("span","badge");
+  p.innerHTML="<b>"+state.ksym+"</b> 終値 "+fmtPrice(all[last].c*(state.cur==="jpy"?state.fx:1));
+  box.appendChild(p);
+  const l=el("span","badge");
+  const unit = tf==="1w"?"週":"日";
+  l.innerHTML='<span style="color:var(--ma25)">━</span> 25'+unit+'線　<span style="color:var(--ma75)">━</span> 75'+unit+'線';
+  box.appendChild(l);
+}
+
+function hookKHover(view,m25,m75,fx,X,n){
+  const plot=$("#kplot"),cross=$("#kcross"),tip=$("#ktip");
+  plot.onpointerleave=function(){cross.style.display="none";tip.style.display="none";};
+  plot.onpointermove=function(ev){
+    const r=plot.getBoundingClientRect();
+    const rel=Math.min(.999,Math.max(0,(ev.clientX-r.left)/r.width));
+    const i=Math.min(n-1,Math.floor(rel*n)), k=view[i];
+    cross.style.display="block"; cross.style.left=(X(i)/1000*r.width)+"px";
+    const d=new Date(k.t), ch=(k.c/k.o-1)*100;
+    tip.innerHTML='<div class="t-date">'+d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()+'</div>'
+      +'<div class="t-row"><span>始値</span><span>'+fmtPrice(k.o*fx)+'</span></div>'
+      +'<div class="t-row"><span>高値</span><span>'+fmtPrice(k.h*fx)+'</span></div>'
+      +'<div class="t-row"><span>安値</span><span>'+fmtPrice(k.l*fx)+'</span></div>'
+      +'<div class="t-row"><span>終値</span><span class="'+cls(ch)+'">'+fmtPrice(k.c*fx)+'</span></div>'
+      +(m25[i]!=null?'<div class="t-row"><span style="color:var(--ma25)">25</span><span>'+fmtPrice(m25[i]*fx)+'</span></div>':"")
+      +(m75[i]!=null?'<div class="t-row"><span style="color:var(--ma75)">75</span><span>'+fmtPrice(m75[i]*fx)+'</span></div>':"");
+    tip.style.display="block";
+    tip.style.left=Math.min(r.width-tip.offsetWidth-4,Math.max(4,X(i)/1000*r.width+12))+"px";
+    tip.style.top="10px";
+  };
+}
+
+/* ── ドミナンス ── */
+async function renderDominance(){
+  let live=null;
+  try{
+    const g=await getJSON(CG+"/global");
+    const d=g.data;
+    live = d.market_cap_percentage.btc;
+    $("#dom-now").textContent=live.toFixed(1)+"%";
+    $("#dom-now").style.color = live>=55?"var(--btc)":"var(--ma75)";
+    $("#dom-eth").textContent=(d.market_cap_percentage.eth||0).toFixed(1)+"%";
+    const totalUsd=d.total_market_cap.usd;
+    $("#dom-cap").textContent = state.cur==="jpy"
+      ? ((totalUsd*(state.fx||1))/1e12).toFixed(2)+"兆円" : "$"+(totalUsd/1e12).toFixed(2)+"T";
+  }catch(e){ $("#dom-now").textContent="—"; }
+
+  const pts=DOM_REF.map(function(r){
+    const ym=r[0].split("-");
+    return [Date.UTC(+ym[0],+ym[1]-1,1), r[1]];
+  });
+  if(live!=null) pts.push([Date.now(),live]);
+  const svg=$("#dsvg"),W=1000,H=260,P=10;
+  svg.innerHTML="";
+  const t0=pts[0][0], t1=pts[pts.length-1][0], lo=30, hi=95;
+  const X=t=>P+(t-t0)/(t1-t0)*(W-P*2), Y=v=>P+(hi-v)/(hi-lo)*(H-P*2);
+  const g=svgEl("g",{"class":"grid"});
+  [40,50,60,70,80,90].forEach(v=>{
+    g.appendChild(svgEl("line",{x1:0,x2:W,y1:Y(v),y2:Y(v)}));
+    const t=svgEl("text",{"class":"ylab",x:4,y:Y(v)-4}); t.textContent=v+"%"; g.appendChild(t);
+  });
+  svg.appendChild(g);
+  svg.appendChild(svgEl("rect",{x:0,y:Y(50),width:W,height:Math.max(0,H-P-Y(50)),fill:"rgba(127,212,193,.07)"}));
+  const lbl=svgEl("text",{"class":"ylab",x:W-4,y:Y(50)+14,"text-anchor":"end",fill:"#7FD4C1"});
+  lbl.textContent="50%以下＝アルト優位の目安"; svg.appendChild(lbl);
+  const d=pts.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(2)+" "+Y(p[1]).toFixed(2)).join(" ");
+  svg.appendChild(svgEl("path",{"class":"series",d:d,stroke:"var(--btc)","stroke-width":2,
+    "stroke-dasharray":"5 3",opacity:".85"}));
+  if(live!=null){
+    const last=pts[pts.length-1];
+    svg.appendChild(svgEl("circle",{cx:X(last[0]),cy:Y(last[1]),r:4,fill:"var(--btc)"}));
+  }
+  const ax=$("#dxaxis"); ax.innerHTML="";
+  [pts[0],pts[Math.floor(pts.length/2)],pts[pts.length-1]].forEach(p=>{
+    const s=el("span"), dd=new Date(p[0]);
+    s.textContent=dd.getFullYear()+"/"+(dd.getMonth()+1); ax.appendChild(s);
+  });
+}
+
+/* ── 月別統計 ── */
+async function buildMonthlyReturns(){
+  const rows=[];
+  try{
+    const m=await klines("BTC","1M",1000);
+    m.forEach(k=>{
+      const d=new Date(k.t);
+      if(k.o>0) rows.push({y:d.getUTCFullYear(),m:d.getUTCMonth()+1,ret:(k.c/k.o-1)*100});
+    });
+  }catch(e){}
+  try{
+    const start=Math.floor(Date.UTC(2014,11,20)/1000);
+    const d=await getJSON("https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=1000&start="+start);
+    const oh=(d.data&&d.data.ohlc)||[];
+    const by={};
+    oh.forEach(x=>{
+      const dt=new Date(+x.timestamp*1000);
+      const key=dt.getUTCFullYear()+"-"+(dt.getUTCMonth()+1);
+      if(!by[key]) by[key]={y:dt.getUTCFullYear(),m:dt.getUTCMonth()+1,o:+x.open,c:+x.close};
+      else by[key].c=+x.close;
+    });
+    const have={}; rows.forEach(r=>have[r.y+"-"+r.m]=1);
+    Object.keys(by).forEach(k=>{
+      const v=by[k];
+      if(v.y>=2015 && !have[v.y+"-"+v.m] && v.o>0) rows.push({y:v.y,m:v.m,ret:(v.c/v.o-1)*100});
+    });
+  }catch(e){}
+  rows.sort((a,b)=>a.y-b.y||a.m-b.m);
+  const now=new Date();
+  return rows.filter(r=>!(r.y===now.getFullYear()&&r.m===now.getMonth()+1));
+}
+
+async function renderMonthly(){
+  const rows=await buildMonthlyReturns();
+  if(!rows.length){
+    $("#month-tbl").innerHTML="<tbody><tr><td>データを取得できませんでした。</td></tr></tbody>";
+    return;
+  }
+  const first=rows[0], last=rows[rows.length-1];
+  $("#month-range").textContent=first.y+"年"+first.m+"月〜"+last.y+"年"+last.m+"月（"+rows.length+"か月）";
+
+  const stats=[];
+  for(let i=1;i<=12;i++){
+    const r=rows.filter(x=>x.m===i).map(x=>x.ret);
+    if(!r.length) continue;
+    const win=r.filter(x=>x>0).length;
+    stats.push({m:i,n:r.length,win:win,lose:r.length-win,rate:win/r.length*100,
+      avg:mean(r),med:median(r),max:Math.max.apply(null,r),min:Math.min.apply(null,r)});
+  }
+  const bestAvg=Math.max.apply(null,stats.map(s=>s.avg));
+  const worstAvg=Math.min.apply(null,stats.map(s=>s.avg));
+  const maxAbs=Math.max.apply(null,stats.map(s=>Math.abs(s.avg)));
+  let html='<thead><tr><th>月</th><th>勝敗</th><th>勝率</th><th>平均騰落率</th><th>中央値</th><th>最大</th><th>最小</th></tr></thead><tbody>';
+  stats.forEach(s=>{
+    const bw=Math.max(2,Math.abs(s.avg)/maxAbs*46);
+    html+='<tr class="'+(s.avg===bestAvg?"best":s.avg===worstAvg?"worst":"")+'">'
+      +'<td>'+MONTHS[s.m-1]+'</td>'
+      +'<td>'+s.win+'勝'+s.lose+'敗</td>'
+      +'<td class="'+(s.rate>=50?"up":"down")+'">'+s.rate.toFixed(0)+'%</td>'
+      +'<td class="'+cls(s.avg)+'"><span class="bar" style="width:'+bw+'px;background:'
+      +(s.avg>=0?"var(--up)":"var(--down)")+'"></span>'+fmtPct(s.avg)+'</td>'
+      +'<td class="'+cls(s.med)+'">'+fmtPct(s.med)+'</td>'
+      +'<td class="up">'+fmtPct(s.max)+'</td>'
+      +'<td class="down">'+fmtPct(s.min)+'</td></tr>';
+  });
+  html+="</tbody>";
+  $("#month-tbl").innerHTML=html;
+
+  const bs=stats.filter(s=>s.avg===bestAvg)[0], ws=stats.filter(s=>s.avg===worstAvg)[0];
+  const nowM=new Date().getMonth()+1, cur=stats.filter(s=>s.m===nowM)[0];
+  let note="平均騰落率が最も高いのは"+MONTHS[bs.m-1]+"（"+fmtPct(bs.avg)+"／勝率"+bs.rate.toFixed(0)
+    +"%）、最も低いのは"+MONTHS[ws.m-1]+"（"+fmtPct(ws.avg)+"／勝率"+ws.rate.toFixed(0)+"%）。";
+  if(cur) note+="今月（"+MONTHS[nowM-1]+"）は過去"+cur.n+"回で"+cur.win+"勝"+cur.lose+"敗、平均"+fmtPct(cur.avg)+"です。";
+  note+=" 各月のサンプルは10回前後にとどまり、少数の急騰・急落月に平均が引っ張られます。傾向の参考にとどめてください。";
+  $("#month-note").textContent=note;
+
+  const years=[]; rows.forEach(r=>{ if(years.indexOf(r.y)<0) years.push(r.y); });
+  years.sort();
+  let h='<table><thead><tr><th>年</th>'+MONTHS.map(m=>'<th>'+m.replace("月","")+'</th>').join("")
+    +'<th>年間</th></tr></thead><tbody>';
+  years.forEach(y=>{
+    const yr=rows.filter(r=>r.y===y);
+    let tot=1; yr.forEach(r=>tot*=(1+r.ret/100));
+    h+='<tr><td>'+y+'</td>';
+    for(let m=1;m<=12;m++){
+      const r=yr.filter(x=>x.m===m)[0];
+      if(!r){ h+='<td style="color:var(--ink-dim)">–</td>'; continue; }
+      const a=Math.min(1,Math.abs(r.ret)/60);
+      const bg=r.ret>=0?"rgba(242,88,75,"+(.10+a*.55)+")":"rgba(77,163,224,"+(.10+a*.55)+")";
+      h+='<td style="background:'+bg+'" title="'+y+'年'+m+'月 '+fmtPct(r.ret)+'">'
+        +(r.ret>=0?"+":"")+r.ret.toFixed(0)+'</td>';
+    }
+    const tp=(tot-1)*100;
+    h+='<td class="'+cls(tp)+'" style="font-weight:600">'+(tp>=0?"+":"")+tp.toFixed(0)+'</td></tr>';
+  });
+  h+="</tbody></table>";
+  $("#heat").innerHTML='<p class="muted" style="margin-bottom:6px">年×月の騰落率（%）</p>'+h;
+}
+
+/* ── 上昇の順番 ── */
+async function renderRotation(){
+  const syms=["BTC","ETH","XRP","BNB","SOL"];
+  const wk={}, dy={};
+  try{
+    for(let i=0;i<syms.length;i++) wk[syms[i]]=await klines(syms[i],"1w",1000);
+    for(let i=0;i<syms.length;i++) dy[syms[i]]=await klines(syms[i],"1d",1000);
+  }catch(e){
+    $("#rot-tbl").innerHTML="<tbody><tr><td>データを取得できませんでした。</td></tr></tbody>";
+    return;
+  }
+  const btcW=wk.BTC, btcMap={}; btcW.forEach(k=>btcMap[k.t]=k);
+  const results=[];
+  syms.filter(s=>s!=="BTC").forEach(s=>{
+    const a=wk[s], aMap={}; a.forEach(k=>aMap[k.t]=k);
+    const times=btcW.map(k=>k.t).filter(t=>aMap[t]);
+    let n=0, follow=0; const exc=[];
+    for(let i=0;i<times.length-1;i++){
+      const t=times[i], tn=times[i+1];
+      if(!aMap[tn]||!btcMap[tn]) continue;
+      const bRet=(btcMap[t].c/btcMap[t].o-1)*100;
+      if(bRet<3) continue;
+      const bNext=(btcMap[tn].c/btcMap[tn].o-1)*100;
+      const aNext=(aMap[tn].c/aMap[tn].o-1)*100;
+      n++; if(aNext>bNext) follow++;
+      exc.push(aNext-bNext);
+    }
+    const bd=dy.BTC, ad=dy[s], bm={};
+    bd.forEach(k=>bm[k.t]=k.c);
+    const common=ad.filter(k=>bm[k.t]).map(k=>({t:k.t,a:k.c,b:bm[k.t]}));
+    const rets=[];
+    for(let i=1;i<common.length;i++)
+      rets.push({a:Math.log(common[i].a/common[i-1].a),b:Math.log(common[i].b/common[i-1].b)});
+    let bestK=0,bestR=-2;
+    for(let k=0;k<=10;k++){
+      const X=[],Y=[];
+      for(let i=0;i+k<rets.length;i++){X.push(rets[i].b);Y.push(rets[i+k].a);}
+      if(X.length<50) continue;
+      const mx=mean(X),my=mean(Y);
+      let sxy=0,sx=0,sy=0;
+      for(let i=0;i<X.length;i++){const dx=X[i]-mx,dyy=Y[i]-my;sxy+=dx*dyy;sx+=dx*dx;sy+=dyy*dyy;}
+      const r=sxy/Math.sqrt((sx*sy)||1);
+      if(r>bestR){bestR=r;bestK=k;}
+    }
+    results.push({s:s,n:n,follow:follow,rate:n?follow/n*100:null,
+      avg:exc.length?mean(exc):null,bestK:bestK,bestR:bestR});
+  });
+
+  let html='<thead><tr><th>銘柄</th><th>翌週にBTC超え</th><th>回数</th><th>平均超過リターン</th>'
+    +'<th>最も連動する遅れ</th><th>相関</th></tr></thead><tbody>';
+  results.forEach(r=>{
+    const id=SYM2ID[r.s];
+    html+='<tr><td><span style="color:'+COINS[id].color+'">■</span> '+COINS[id].ja+'（'+r.s+'）</td>'
+      +'<td class="'+(r.rate>=50?"up":"down")+'">'+(r.rate==null?"—":r.rate.toFixed(0)+"%")+'</td>'
+      +'<td>'+r.follow+'／'+r.n+'</td>'
+      +'<td class="'+cls(r.avg)+'">'+(r.avg==null?"—":fmtPct(r.avg))+'</td>'
+      +'<td>'+(r.bestK===0?"同日":r.bestK+"日遅れ")+'</td>'
+      +'<td>'+r.bestR.toFixed(2)+'</td></tr>';
+  });
+  html+="</tbody>";
+  $("#rot-tbl").innerHTML=html;
+
+  const valid=results.filter(r=>r.rate!=null);
+  if(!valid.length){ $("#rot-note").textContent="十分なサンプルが集まりませんでした。"; return; }
+  const avgRate=mean(valid.map(r=>r.rate));
+  const lead=valid.slice().sort((a,b)=>b.rate-a.rate)[0];
+  $("#rot-note").textContent =
+    "ビットコインが週足で+3%以上上昇した翌週、アルト4銘柄は平均"+avgRate.toFixed(0)
+    +"%の確率でビットコインの騰落率を上回りました（最も高いのは"+COINS[SYM2ID[lead.s]].ja+"の"
+    +lead.rate.toFixed(0)+"%）。「最も連動する遅れ」は日足の日次リターンで相関が最大になるずらし日数で、"
+    +"0日なら同時、数日なら後追いの傾向を示します。いずれも各銘柄の上場以降の全データによる過去の集計で、"
+    +"将来の順番を保証するものではありません。";
+}
+
+/* ── トピック ── */
+function renderThemes(extra){
+  const box=$("#topics"); box.innerHTML="";
+  (extra||[]).forEach(t=>{
+    const d=el("div","topic live");
+    d.innerHTML='<span class="tag">'+(t.tag||"TODAY")+'</span><h3>'+t.title+'</h3><p>'+t.summary+'</p>';
+    box.appendChild(d);
+  });
+  THEMES.forEach(t=>{
+    const d=el("div","topic");
+    d.innerHTML='<span class="tag">'+t.tag+'</span><h3>'+t.h+'</h3><p>'+t.p+'</p>';
+    box.appendChild(d);
+  });
+}
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+async function loadDailyTopics(force){
+  const key="topics:"+todayKey();
+  $("#topic-date").textContent = todayKey()+" 時点";
+  if(!force){
+    const c=await store.get(key);
+    if(c){ try{ renderThemes(JSON.parse(c)); return; }catch(e){} }
+  }
+  const btn=$("#topic-refresh"); btn.disabled=true; btn.textContent="検索中…";
+  try{
+    const prompt = "今日は"+todayKey()+"です。暗号資産市場について、日本語で以下をJSONのみで返してください（前置き・コードブロック禁止）。"
+      +"web_searchで直近1〜2日のニュースを調べ、事実ベースで簡潔に。特定銘柄の売買推奨はしないこと。\n"
+      +'{"topics":[{"tag":"短い分類（例:規制/ETF/オンチェーン）","title":"25文字以内の見出し","summary":"90文字以内の要約。末尾に出典媒体名を括弧書き"}]}\n'
+      +"topicsは3件。ビットコイン、イーサリアム、そのとき注目度が高まっている銘柄やテーマを1件ずつ含めてください。";
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,
+        messages:[{role:"user",content:prompt}],
+        tools:[{type:"web_search_20250305",name:"web_search"}]})
+    });
+    if(!res.ok) throw new Error("api");
+    const data=await res.json();
+    const text=(data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n");
+    const clean=text.replace(/```json|```/g,"").trim();
+    const st=clean.indexOf("{"), en=clean.lastIndexOf("}");
+    const parsed=JSON.parse(clean.slice(st,en+1));
+    const topics=(parsed.topics||[]).slice(0,3);
+    if(topics.length){ await store.set(key,JSON.stringify(topics)); renderThemes(topics); }
+    else renderThemes([]);
+  }catch(e){
+    renderThemes([]);
+    $("#topic-date").textContent = todayKey()+" 時点（今日のトピックは取得できませんでした）";
+  }finally{
+    btn.disabled=false; btn.textContent="今日のトピックを更新";
+  }
+}
+
+/* ── 状態表示 ── */
+function showNotice(t,b,retry){
+  const n=$("#notice"); n.innerHTML="<b>"+t+"</b><p>"+b+"</p>";
+  if(retry){
+    const x=el("button","ghost"); x.textContent="再試行";
+    x.onclick=function(){n.classList.remove("show");refresh();};
+    n.appendChild(x);
+  }
+  n.classList.add("show");
+}
+function tickUpdated(){
+  if(!state.updatedAt) return;
+  const s=Math.round((Date.now()-state.updatedAt)/1000), t=new Date(state.updatedAt);
+  const hm=String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");
+  $("#updated").textContent = s<60?(hm+" 更新（"+s+"秒前）"):(hm+" 更新（"+Math.round(s/60)+"分前）");
+  $("#meta").classList.toggle("stale",s>180);
+}
+function skeleton(){
+  if($("#cards").children.length) return;
+  for(let i=0;i<5;i++) $("#cards").appendChild(el("div","sk sk-card"));
+}
+
+/* ── 更新 ── */
+async function refresh(){
+  if(state.loading) return;
+  state.loading=true;
+  $("#reload").querySelector("svg").classList.add("spin");
+  skeleton();
+  try{
+    await loadMarkets();
+    $("#notice").classList.remove("show");
+    renderCards(); renderTide(); renderLegend(); renderOverlay(); tickUpdated();
+    await loadSeries();
+    renderCards(); renderOverlay();
+  }catch(e){
+    if(e.code===429) showNotice("取得回数の上限に達しました",
+      "CoinGeckoの無料APIは短時間の連続取得を制限しています。1分ほど待ってから再試行してください。",true);
+    else showNotice("価格データを取得できませんでした",
+      "通信環境を確認して再試行してください。広告ブロッカーが通信を遮っている場合もあります。",true);
+  }finally{
+    state.loading=false;
+    $("#reload").querySelector("svg").classList.remove("spin");
+  }
+}
+
+/* ── 操作 ── */
+function segHandler(sel,fn){
+  $(sel).addEventListener("click",async function(e){
+    const b=e.target.closest("button"); if(!b) return;
+    const kids=$(sel).children;
+    for(let i=0;i<kids.length;i++) kids[i].setAttribute("aria-pressed",kids[i]===b?"true":"false");
+    await fn(b);
+  });
+}
+segHandler("#period",async function(b){
+  state.period=b.dataset.p; await store.set("period",state.period);
+  renderCards(); renderTide(); renderOverlay();
+  try{ await loadSeries(); renderCards(); renderOverlay(); }
+  catch(e){ if(e.code===429) showNotice("取得回数の上限に達しました","1分ほど待ってから切り替えてください。",true); }
+});
+segHandler("#cur",async function(b){
+  state.cur=b.dataset.c; await store.set("cur",state.cur);
+  await refresh(); renderKline(); renderDominance();
+});
+segHandler("#ksym",async function(b){ state.ksym=b.dataset.s; await store.set("ksym",state.ksym); renderKline(); });
+segHandler("#ktf",async function(b){ state.ktf=b.dataset.t; await store.set("ktf",state.ktf); renderKline(); });
+segHandler("#ktype",async function(b){ state.ktype=b.dataset.k; await store.set("ktype",state.ktype); renderKline(); });
+segHandler("#kzoom",async function(b){ state.kzoom=+b.dataset.z; renderKline(); });
+$("#reload").addEventListener("click",function(){ refresh(); renderDominance(); });
+$("#topic-refresh").addEventListener("click",function(){ loadDailyTopics(true); });
+
+setInterval(function(){ if(document.visibilityState==="visible") refresh(); },60000);
+setInterval(tickUpdated,5000);
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="visible"&&state.updatedAt&&Date.now()-state.updatedAt>60000) refresh();
+});
+const secs=[].slice.call(document.querySelectorAll("section[id]"));
+window.addEventListener("scroll",function(){
+  let cur=null;
+  secs.forEach(function(s){ if(s.getBoundingClientRect().top<120) cur=s.id; });
+  document.querySelectorAll("nav a").forEach(function(a){
+    a.classList.toggle("on",a.getAttribute("href")==="#"+cur);
+  });
+},{passive:true});
+
+/* ── 起動 ── */
+(async function init(){
+  const p=await store.get("period");
+  if(p&&PERIODS[p]){
+    state.period=p;
+    [].forEach.call($("#period").children,x=>x.setAttribute("aria-pressed",x.dataset.p===p?"true":"false"));
+  }
+  const c=await store.get("cur");
+  if(c==="usd"||c==="jpy"){
+    state.cur=c;
+    [].forEach.call($("#cur").children,x=>x.setAttribute("aria-pressed",x.dataset.c===c?"true":"false"));
+  }
+  const ks=await store.get("ksym");
+  if(ks&&SYM2ID[ks]){
+    state.ksym=ks;
+    [].forEach.call($("#ksym").children,x=>x.setAttribute("aria-pressed",x.dataset.s===ks?"true":"false"));
+  }
+  const kt=await store.get("ktf");
+  if(kt==="1d"||kt==="1w"){
+    state.ktf=kt;
+    [].forEach.call($("#ktf").children,x=>x.setAttribute("aria-pressed",x.dataset.t===kt?"true":"false"));
+  }
+  const kk=await store.get("ktype");
+  if(kk==="candle"||kk==="line"){
+    state.ktype=kk;
+    [].forEach.call($("#ktype").children,x=>x.setAttribute("aria-pressed",x.dataset.k===kk?"true":"false"));
+  }
+
+  renderThemes([]);
+  await refresh();
+  renderKline();
+  renderDominance();
+  renderMonthly();
+  renderRotation();
+  loadDailyTopics(false);
+})();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>潮目盤 — 暗号資産ダッシュボード</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand">
+      <h1>潮目盤</h1>
+      <p>BTC・ETH・XRP・BNB・SOL ／ 資金の流れと統計を一目で</p>
+    </div>
+    <div class="meta" id="meta"><span class="dot"></span><span id="updated">読み込み中</span></div>
+  </header>
+
+  <nav id="nav">
+    <a href="#s-tide">潮目</a><a href="#s-chart">ローソク足</a><a href="#s-dom">ドミナンス</a>
+    <a href="#s-month">月別統計</a><a href="#s-rot">上昇の順番</a><a href="#s-topic">注目テーマ</a>
+  </nav>
+
+  <div class="controls">
+    <div class="seg" id="period" role="group" aria-label="表示期間">
+      <button data-p="24h" aria-pressed="false">24時間</button>
+      <button data-p="7d" aria-pressed="true">7日</button>
+      <button data-p="30d" aria-pressed="false">30日</button>
+      <button data-p="1y" aria-pressed="false">1年</button>
+    </div>
+    <div class="seg" id="cur" role="group" aria-label="表示通貨">
+      <button data-c="jpy" aria-pressed="true">円</button>
+      <button data-c="usd" aria-pressed="false">ドル</button>
+    </div>
+    <button class="ghost" id="reload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>更新
+    </button>
+  </div>
+
+  <div class="notice" id="notice"></div>
+
+  <section id="s-tide">
+    <div class="eyebrow"><h2>対ビットコイン潮位</h2>
+      <span>ビットコインを0として、どこへ資金が回っているか</span></div>
+    <div class="tide">
+      <div class="tide-ends"><span>← 資金が引く（BTCに劣後）</span><span>資金が満ちる（BTCに優越）→</span></div>
+      <div class="tide-track" id="tide"><div class="tide-axis"></div><div class="tide-zero" style="left:50%"></div></div>
+      <p class="tide-note" id="tide-note">読み込み中です。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><h2>銘柄一覧</h2><span>赤＝上昇／青＝下落（日本式の色）</span></div>
+    <div class="grid5" id="cards"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><h2>重ね合わせ</h2><span>期間の始点を0%に揃えて比較。凡例クリックで表示切替</span></div>
+    <div class="chart-card">
+      <div class="legend" id="legend"></div>
+      <div class="plot" id="plot">
+        <svg id="svg" preserveAspectRatio="none" viewBox="0 0 1000 300"></svg>
+        <div class="cross" id="cross"></div><div class="tip" id="tip"></div>
+      </div>
+      <div class="xaxis"><span id="x0"></span><span id="x1"></span><span id="x2"></span></div>
+    </div>
+  </section>
+
+  <section id="s-chart">
+    <div class="eyebrow"><h2>ローソク足 ／ マルチタイムフレーム</h2>
+      <span>25本線（短期）と75本線（長期）付き。日足と週足を切り替えて確認</span></div>
+    <div class="chart-card">
+      <div class="mtf">
+        <div class="seg" id="ksym" role="group" aria-label="銘柄">
+          <button data-s="BTC" aria-pressed="true">BTC</button><button data-s="ETH" aria-pressed="false">ETH</button>
+          <button data-s="XRP" aria-pressed="false">XRP</button><button data-s="BNB" aria-pressed="false">BNB</button>
+          <button data-s="SOL" aria-pressed="false">SOL</button>
+        </div>
+        <div class="seg" id="ktf" role="group" aria-label="時間軸">
+          <button data-t="1d" aria-pressed="true">日足</button><button data-t="1w" aria-pressed="false">週足</button>
+        </div>
+        <div class="seg" id="ktype" role="group" aria-label="表示形式">
+          <button data-k="candle" aria-pressed="true">ローソク</button><button data-k="line" aria-pressed="false">ライン</button>
+        </div>
+        <div class="seg" id="kzoom" role="group" aria-label="表示本数">
+          <button data-z="60" aria-pressed="false">60本</button><button data-z="120" aria-pressed="true">120本</button>
+          <button data-z="250" aria-pressed="false">250本</button>
+        </div>
+      </div>
+      <div class="plot" id="kplot" style="height:380px">
+        <svg id="ksvg" preserveAspectRatio="none" viewBox="0 0 1000 380"></svg>
+        <div class="cross" id="kcross"></div><div class="tip" id="ktip"></div>
+      </div>
+      <div class="xaxis" id="kxaxis"></div>
+      <div class="status" id="kstatus"></div>
+    </div>
+    <p class="muted">価格はUSDT建て。円表示のときはビットコインの円／ドル比率で概算換算しています。25本線と75本線は、日足なら25日線・75日線、週足なら25週線・75週線です。</p>
+  </section>
+
+  <section id="s-dom">
+    <div class="eyebrow"><h2>ビットコインドミナンス</h2>
+      <span>市場全体の時価総額に占めるBTCの割合。低下＝アルトへ資金が回る局面</span></div>
+    <div class="chart-card">
+      <div class="dom-head">
+        <div><span class="big" id="dom-now">—</span><small>現在のドミナンス（ライブ）</small></div>
+        <div><span class="big" id="dom-eth" style="font-size:22px">—</span><small>イーサリアムの割合</small></div>
+        <div><span class="big" id="dom-cap" style="font-size:22px">—</span><small>暗号資産市場の時価総額</small></div>
+      </div>
+      <div class="plot" id="dplot" style="height:260px">
+        <svg id="dsvg" preserveAspectRatio="none" viewBox="0 0 1000 260"></svg>
+      </div>
+      <div class="xaxis" id="dxaxis"></div>
+    </div>
+    <p class="muted">推移は2015年以降の節目ごとの概算値（参考データ）に、直近のライブ値をつないだ折れ線です。無料APIでは過去のドミナンス実測値が配信されないため、水準の目安としてご覧ください。正確な時系列はTradingViewの銘柄コード「BTC.D」で確認できます。</p>
+  </section>
+
+  <section id="s-month">
+    <div class="eyebrow"><h2>ビットコインの月別成績</h2><span id="month-range">集計中</span></div>
+    <div class="tbl-wrap"><table id="month-tbl"><tbody><tr><td>集計中です…</td></tr></tbody></table></div>
+    <p class="muted" id="month-note"></p>
+    <div class="heat" id="heat"></div>
+  </section>
+
+  <section id="s-rot">
+    <div class="eyebrow"><h2>ビットコイン→アルトの順で上がった確率</h2>
+      <span>BTCが週足で+3%以上上昇した週の「翌週」を検証</span></div>
+    <div class="tbl-wrap"><table id="rot-tbl"><tbody><tr><td>集計中です…</td></tr></tbody></table></div>
+    <p class="muted" id="rot-note"></p>
+  </section>
+
+  <section id="s-topic">
+    <div class="eyebrow"><h2>注目テーマと今日のトピック</h2>
+      <span id="topic-date"></span>
+      <button class="ghost" id="topic-refresh" style="margin-left:auto">今日のトピックを更新</button></div>
+    <div class="topics" id="topics"></div>
+    <p class="muted">テーマは2026年8月時点の市場材料を整理したものです。特定銘柄の売買を勧めるものではありません。</p>
+  </section>
+
+  <footer>
+    <span>価格：CoinGecko ／ ローソク足：Binance（取得できない場合はBybit）</span>
+    <span>情報提供のみを目的としています。投資判断はご自身の責任で。</span>
+  </footer>
+</div>
+
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>
