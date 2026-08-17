@@ -7,6 +7,14 @@ import { $, el, state, fmtPrice, fmtPct, cls, tone, fmtCap, fmtDate } from "./ap
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (t,a)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
 
+/** 出来高（現物枚数）を日本語の桁で短く表示 */
+function fmtVol(v){
+  if(v==null||!isFinite(v)) return "—";
+  if(v>=1e8) return (v/1e8).toFixed(2)+"億";
+  if(v>=1e4) return (v/1e4).toFixed(1)+"万";
+  return v>=100?Math.round(v).toLocaleString("ja-JP"):v.toFixed(2);
+}
+
 /* ── 潮位計 ── */
 export function renderTide(){
   const track=$("#tide");
@@ -144,7 +152,7 @@ export function renderLegend(){
 
 /* ── ローソク足 ── */
 export async function renderKline(){
-  const svg=$("#ksvg"), W=1000,H=380, PT=10, PB=8, VOL=44;
+  const svg=$("#ksvg"), W=1000,H=380, PT=10, PB=8, VOL=64;
   const sym=state.ksym, tf=state.ktf;
   svg.innerHTML=""; $("#kxaxis").innerHTML="";
   let all;
@@ -180,12 +188,17 @@ export async function renderKline(){
   svg.appendChild(g);
 
   const bw=Math.max(1,(W-8)/n*.62);
-  const vg=svgEl("g",{opacity:".35"});
+  const vg=svgEl("g",{opacity:".5"});
   view.forEach((k,i)=>{
     vg.appendChild(svgEl("rect",{x:X(i)-bw/2,y:VY(k.v),width:bw,height:VBASE-VY(k.v),
       fill:k.c>=k.o?"var(--up)":"var(--down)"}));
   });
   svg.appendChild(vg);
+  // 出来高の段のラベル（左：見出し／右：表示範囲の最大値）
+  const vlab=svgEl("text",{"class":"ylab",x:4,y:VBASE-VOL+10});
+  vlab.textContent="出来高"; svg.appendChild(vlab);
+  const vmaxLab=svgEl("text",{"class":"ylab",x:W-4,y:VBASE-VOL+10,"text-anchor":"end"});
+  vmaxLab.textContent="最大 "+fmtVol(vmax)+" "+sym; svg.appendChild(vmaxLab);
   // 出来高の25本移動平均（既存の文字色を淡くして重ねる）
   {
     let vd="", vstarted=false;
@@ -266,6 +279,7 @@ function hookKHover(view,m25,m75,fx,X,n){
       +'<div class="t-row"><span>高値</span><span>'+fmtPrice(k.h*fx)+'</span></div>'
       +'<div class="t-row"><span>安値</span><span>'+fmtPrice(k.l*fx)+'</span></div>'
       +'<div class="t-row"><span>終値</span><span class="'+cls(ch)+'">'+fmtPrice(k.c*fx)+'</span></div>'
+      +'<div class="t-row"><span>出来高</span><span>'+fmtVol(k.v)+' '+state.ksym+'</span></div>'
       +(m25[i]!=null?'<div class="t-row"><span style="color:var(--ma25)">25</span><span>'+fmtPrice(m25[i]*fx)+'</span></div>':"")
       +(m75[i]!=null?'<div class="t-row"><span style="color:var(--ma75)">75</span><span>'+fmtPrice(m75[i]*fx)+'</span></div>':"");
     tip.style.display="block";
