@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-08-16",
-  "generatedAtISO": "2026-08-16T11:07:47.923Z",
+  "generatedAt": "2026-08-30",
+  "generatedAtISO": "2026-08-30T11:49:05.394Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/価格",
-      "title": "BTC・ETHともに軟調でレンジ推移",
-      "summary": "BTCは6.2万ドル台、ETHは1,870ドル台で推移し軟調。米上院がClarity Act採決を先送りし規制不透明感も継続（Investing News/CoinDesk）"
+      "tag": "マクロ",
+      "title": "ジャクソンホール講演でBTC急落",
+      "summary": "FRBワーシュ議長講演を受け9月利上げ観測が強まり、BTCは8万ドル台から一時7万6,909ドルに下落（CRYPTO TIMES）"
     },
     {
-      "tag": "規制/コンプライアンス",
-      "title": "Binance、HTXなど16取引所と取引遮断",
-      "summary": "BinanceがEU・英・米の対露制裁対応でHTXやEXMOなど16プラットフォームとの取引処理を8月23日までに段階的に停止（Cointribune/CryptoBriefing）"
+      "tag": "ETF/資金フロー",
+      "title": "ETH急騰、ETF資金流入が支え",
+      "summary": "イーサリアムは1週間で29.8%急騰し2,546ドルに到達、ETF資金流入とショート巻き戻しが要因（Bitcoin News）"
     },
     {
-      "tag": "オンチェーン/altcoin",
-      "title": "Chainlink急伸、ETH steaking最高更新",
-      "summary": "LINKが週間で5%超上昇し出来高も急増、一方ETH steaking比率は34.4%と過去最高を記録し機関需要を示唆（Altcoin Buzz/CoinMarketCap）"
+      "tag": "オンチェーン",
+      "title": "ソラナ企業トレジャリー保有拡大",
+      "summary": "SOL価格が8月に急伸する中、企業トレジャリーの累計保有量が約1630万SOL・評価額17億ドルに達した（NADA NEWS）"
     }
   ]
 }
