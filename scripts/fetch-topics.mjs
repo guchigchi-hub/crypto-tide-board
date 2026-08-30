@@ -19,6 +19,8 @@ const OUT = resolve(ROOT, "data/topics.json");
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
+// ワークスペース未指定の個人キーは anthropic-workspace-id ヘッダが必須
+const WORKSPACE_ID = process.env.ANTHROPIC_WORKSPACE_ID;
 
 if (!API_KEY) {
   console.error("ANTHROPIC_API_KEY が設定されていません。");
@@ -52,7 +54,8 @@ async function main() {
     headers: {
       "content-type": "application/json",
       "x-api-key": API_KEY,
-      "anthropic-version": "2023-06-01"
+      "anthropic-version": "2023-06-01",
+      ...(WORKSPACE_ID ? { "anthropic-workspace-id": WORKSPACE_ID } : {})
     },
     body: JSON.stringify({
       model: MODEL,

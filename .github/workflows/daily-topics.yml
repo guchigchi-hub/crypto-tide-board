@@ -23,6 +23,7 @@ jobs:
       - name: トピックを取得
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_WORKSPACE_ID: ${{ secrets.ANTHROPIC_WORKSPACE_ID }}
         run: node scripts/fetch-topics.mjs
 
       - name: 変更をコミット
