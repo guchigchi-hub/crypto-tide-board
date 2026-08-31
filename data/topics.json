@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-08-30",
-  "generatedAtISO": "2026-08-30T11:49:05.394Z",
+  "generatedAt": "2026-09-01",
+  "generatedAtISO": "2026-08-31T22:02:02.713Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ",
-      "title": "ジャクソンホール講演でBTC急落",
-      "summary": "FRBワーシュ議長講演を受け9月利上げ観測が強まり、BTCは8万ドル台から一時7万6,909ドルに下落（CRYPTO TIMES）"
+      "tag": "マクロ/価格動向",
+      "title": "BTC1244万円前後、ETH38.6万円台",
+      "summary": "8月31日時点のBTCは約1244万円、ETHは約38.6万円、市場全体の時価総額は428兆円規模（CRYPTO TIMES）"
     },
     {
-      "tag": "ETF/資金フロー",
-      "title": "ETH急騰、ETF資金流入が支え",
-      "summary": "イーサリアムは1週間で29.8%急騰し2,546ドルに到達、ETF資金流入とショート巻き戻しが要因（Bitcoin News）"
+      "tag": "機関投資家/ETH",
+      "title": "米ビットマイン、ETH追加購入65週連続",
+      "summary": "NYSE上場のビットマインが暗号資産保有総額156億ドルに到達、590万ETH超を保有し65週連続で買い増し（Investing.com）"
     },
     {
-      "tag": "オンチェーン",
-      "title": "ソラナ企業トレジャリー保有拡大",
-      "summary": "SOL価格が8月に急伸する中、企業トレジャリーの累計保有量が約1630万SOL・評価額17億ドルに達した（NADA NEWS）"
+      "tag": "セキュリティ",
+      "title": "レジャー、ETH用アプリの脆弱性開示",
+      "summary": "ハードウェアウォレット大手レジャーが署名関連の脆弱性2件を開示、悪用の形跡は未確認と説明（CRYPTO TIMES）"
     }
   ]
 }
