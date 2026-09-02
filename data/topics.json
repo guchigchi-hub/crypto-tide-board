@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-01",
-  "generatedAtISO": "2026-08-31T22:02:02.713Z",
+  "generatedAt": "2026-09-03",
+  "generatedAtISO": "2026-09-02T22:02:51.767Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/価格動向",
-      "title": "BTC1244万円前後、ETH38.6万円台",
-      "summary": "8月31日時点のBTCは約1244万円、ETHは約38.6万円、市場全体の時価総額は428兆円規模（CRYPTO TIMES）"
+      "tag": "ETF",
+      "title": "BTC現物ETFが1日ぶり流出転換",
+      "summary": "9月1日、米BTC現物ETFは2.365億ドルの純流出、IBITから2億ドル超流出（JinaCoin）"
     },
     {
-      "tag": "機関投資家/ETH",
-      "title": "米ビットマイン、ETH追加購入65週連続",
-      "summary": "NYSE上場のビットマインが暗号資産保有総額156億ドルに到達、590万ETH超を保有し65週連続で買い増し（Investing.com）"
+      "tag": "ステーブルコイン",
+      "title": "世界21金融機関が新会社設立へ",
+      "summary": "三菱UFJ銀行も参加し2026年下期に新会社設立、2027年上期サービス開始目指す（JinaCoin）"
     },
     {
-      "tag": "セキュリティ",
-      "title": "レジャー、ETH用アプリの脆弱性開示",
-      "summary": "ハードウェアウォレット大手レジャーが署名関連の脆弱性2件を開示、悪用の形跡は未確認と説明（CRYPTO TIMES）"
+      "tag": "マクロ",
+      "title": "日本長期金利3%突破、換金売り懸念",
+      "summary": "9月1日新発10年国債利回りが約30年ぶり3%台、仮想通貨への換金売り影響が話題に（CRYPTO TIMES）"
     }
   ]
 }
