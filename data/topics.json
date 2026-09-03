@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-03",
-  "generatedAtISO": "2026-09-02T22:02:51.767Z",
+  "generatedAt": "2026-09-04",
+  "generatedAtISO": "2026-09-03T22:02:33.173Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "ETF",
-      "title": "BTC現物ETFが1日ぶり流出転換",
-      "summary": "9月1日、米BTC現物ETFは2.365億ドルの純流出、IBITから2億ドル超流出（JinaCoin）"
+      "tag": "マクロ/BTC",
+      "title": "米中東緊張緩和とFRB観測でBTC急伸",
+      "summary": "ビットコインは9/3に約5.5%上昇し8.1万ドル台を回復。米イラン停戦観測と利上げ確率低下が追い風（Motley Fool、24/7 Wall St.）"
     },
     {
-      "tag": "ステーブルコイン",
-      "title": "世界21金融機関が新会社設立へ",
-      "summary": "三菱UFJ銀行も参加し2026年下期に新会社設立、2027年上期サービス開始目指す（JinaCoin）"
+      "tag": "ETF/ETH",
+      "title": "ETH ETF資金流入が続き上値模索",
+      "summary": "イーサリアムETFは12営業日連続の資金流入。ETH現物ETFの需要がBTCと明暗を分ける形で継続（CoinMarketCap）"
     },
     {
-      "tag": "マクロ",
-      "title": "日本長期金利3%突破、換金売り懸念",
-      "summary": "9月1日新発10年国債利回りが約30年ぶり3%台、仮想通貨への換金売り影響が話題に（CRYPTO TIMES）"
+      "tag": "規制",
+      "title": "CLARITY法案、9/15の議会採決に注目",
+      "summary": "暗号資産市場構造法案は上院で9/15に手続き投票予定も、成立には依然懐疑的な見方が強い（CNBC）"
     }
   ]
 }
