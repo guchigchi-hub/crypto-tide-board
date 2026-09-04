@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-04",
-  "generatedAtISO": "2026-09-03T22:02:33.173Z",
+  "generatedAt": "2026-09-05",
+  "generatedAtISO": "2026-09-04T22:02:39.060Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "マクロ/BTC",
-      "title": "米中東緊張緩和とFRB観測でBTC急伸",
-      "summary": "ビットコインは9/3に約5.5%上昇し8.1万ドル台を回復。米イラン停戦観測と利上げ確率低下が追い風（Motley Fool、24/7 Wall St.）"
+      "title": "ビットコイン81,000ドル台に上昇",
+      "summary": "FRB高官の発言で利上げ観測が後退し、BTCは5%超上昇し81,000ドル台へ。ETF資金流入も拡大（Yahoo Finance、The Block）"
     },
     {
       "tag": "ETF/ETH",
-      "title": "ETH ETF資金流入が続き上値模索",
-      "summary": "イーサリアムETFは12営業日連続の資金流入。ETH現物ETFの需要がBTCと明暗を分ける形で継続（CoinMarketCap）"
+      "title": "ETH資金流入とレンジ攻防続く",
+      "summary": "現物ETHは12日連続で資金流入。価格は2,400〜2,500ドル台でフィボナッチ支持線を試す展開（CoinMarketCap、BeInCrypto）"
     },
     {
-      "tag": "規制",
-      "title": "CLARITY法案、9/15の議会採決に注目",
-      "summary": "暗号資産市場構造法案は上院で9/15に手続き投票予定も、成立には依然懐疑的な見方が強い（CNBC）"
+      "tag": "アルトコイン/プライバシーコイン",
+      "title": "Zcash(ZEC)が急騰し時価総額10位入り",
+      "summary": "GrayscaleのZEC現物ETF上場を背景に一時1,000ドル超へ約20%急騰、時価総額170億ドル規模に（Hokanews、CoinGape系記事）"
     }
   ]
 }
