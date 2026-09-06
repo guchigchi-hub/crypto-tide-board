@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-05",
-  "generatedAtISO": "2026-09-04T22:02:39.060Z",
+  "generatedAt": "2026-09-07",
+  "generatedAtISO": "2026-09-06T22:02:30.716Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/BTC",
-      "title": "ビットコイン81,000ドル台に上昇",
-      "summary": "FRB高官の発言で利上げ観測が後退し、BTCは5%超上昇し81,000ドル台へ。ETF資金流入も拡大（Yahoo Finance、The Block）"
+      "tag": "マクロ/ETF",
+      "title": "BTC、8万ドル前後で強気も慎重姿勢",
+      "summary": "8月に急伸したBTCは7.9万〜8万ドル台で推移。ETF資金は流入超だが9月利上げ観測が重石（CoinStats AI、Yahoo Finance）"
     },
     {
-      "tag": "ETF/ETH",
-      "title": "ETH資金流入とレンジ攻防続く",
-      "summary": "現物ETHは12日連続で資金流入。価格は2,400〜2,500ドル台でフィボナッチ支持線を試す展開（CoinMarketCap、BeInCrypto）"
+      "tag": "ETF/オンチェーン",
+      "title": "ETH、ETF資金流入が続き強気地合い",
+      "summary": "ETH ETFは12日連続の資金流入。BTC ETFの流出と対照的で、機関投資家の関心がETHに向かう動きも（CoinMarketCap）"
     },
     {
-      "tag": "アルトコイン/プライバシーコイン",
-      "title": "Zcash(ZEC)が急騰し時価総額10位入り",
-      "summary": "GrayscaleのZEC現物ETF上場を背景に一時1,000ドル超へ約20%急騰、時価総額170億ドル規模に（Hokanews、CoinGape系記事）"
+      "tag": "アルトシーズン/規制",
+      "title": "ビットコイン支配率低下、アルト資金流入増",
+      "summary": "BTCドミナンスが60%割れで軟化する一方、上位10銘柄以外の時価総額は月初来10%超増加（bitcoinethereumnews.com）"
     }
   ]
 }
