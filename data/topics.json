@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-07",
-  "generatedAtISO": "2026-09-06T22:02:30.716Z",
+  "generatedAt": "2026-09-09",
+  "generatedAtISO": "2026-09-08T22:03:16.330Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/ETF",
-      "title": "BTC、8万ドル前後で強気も慎重姿勢",
-      "summary": "8月に急伸したBTCは7.9万〜8万ドル台で推移。ETF資金は流入超だが9月利上げ観測が重石（CoinStats AI、Yahoo Finance）"
+      "tag": "マクロ",
+      "title": "BTCはやや軟調、7.8万ドル台",
+      "summary": "9月8日のBTCは78,462ドル前後で前日比1.05%安、時価総額は2.68兆ドルに縮小（JinaCoin）"
     },
     {
-      "tag": "ETF/オンチェーン",
-      "title": "ETH、ETF資金流入が続き強気地合い",
-      "summary": "ETH ETFは12日連続の資金流入。BTC ETFの流出と対照的で、機関投資家の関心がETHに向かう動きも（CoinMarketCap）"
+      "tag": "アルトコイン",
+      "title": "ETHは37.9万円で小幅安",
+      "summary": "9月8日のイーサリアムは約37.9万円で推移、BTC同様に小幅安の展開（CRYPTO TIMES）"
     },
     {
-      "tag": "アルトシーズン/規制",
-      "title": "ビットコイン支配率低下、アルト資金流入増",
-      "summary": "BTCドミナンスが60%割れで軟化する一方、上位10銘柄以外の時価総額は月初来10%超増加（bitcoinethereumnews.com）"
+      "tag": "ミームコイン",
+      "title": "ハンター・バイデン氏ミームコイン発行",
+      "summary": "バイデン前大統領の息子が9月9日にミームコイン「LAPTOP」発行を予告（CRYPTO TIMES）"
     }
   ]
 }
