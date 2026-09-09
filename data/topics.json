@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-09",
-  "generatedAtISO": "2026-09-08T22:03:16.330Z",
+  "generatedAt": "2026-09-10",
+  "generatedAtISO": "2026-09-09T22:02:36.253Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "マクロ",
-      "title": "BTCはやや軟調、7.8万ドル台",
-      "summary": "9月8日のBTCは78,462ドル前後で前日比1.05%安、時価総額は2.68兆ドルに縮小（JinaCoin）"
+      "title": "BTC上昇、FRB利上げ据置観測で",
+      "summary": "BTCが8万ドル台へ上昇。FRB高官が利下げ据置を示唆し米金利低下・ドル安が追い風に（Forbes JAPAN）"
     },
     {
-      "tag": "アルトコイン",
-      "title": "ETHは37.9万円で小幅安",
-      "summary": "9月8日のイーサリアムは約37.9万円で推移、BTC同様に小幅安の展開（CRYPTO TIMES）"
+      "tag": "プロトコル",
+      "title": "ETHガス代をステーブルコインで",
+      "summary": "イーサリアム財団がEIP-8141提案。2027年にステーブルコインでガス代支払い可能との観測が拡散（JinaCoin）"
     },
     {
-      "tag": "ミームコイン",
-      "title": "ハンター・バイデン氏ミームコイン発行",
-      "summary": "バイデン前大統領の息子が9月9日にミームコイン「LAPTOP」発行を予告（CRYPTO TIMES）"
+      "tag": "オンチェーン",
+      "title": "UNI急騰、手数料バーンが話題",
+      "summary": "UniswapのUNIが週次で大幅高。手数料バーン制度稼働とRobinhood Chainでの取引急増が材料（KuCoin）"
     }
   ]
 }
