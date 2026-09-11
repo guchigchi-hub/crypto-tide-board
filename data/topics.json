@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-10",
-  "generatedAtISO": "2026-09-09T22:02:36.253Z",
+  "generatedAt": "2026-09-12",
+  "generatedAtISO": "2026-09-11T22:02:47.795Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "マクロ",
-      "title": "BTC上昇、FRB利上げ据置観測で",
-      "summary": "BTCが8万ドル台へ上昇。FRB高官が利下げ据置を示唆し米金利低下・ドル安が追い風に（Forbes JAPAN）"
-    },
-    {
-      "tag": "プロトコル",
-      "title": "ETHガス代をステーブルコインで",
-      "summary": "イーサリアム財団がEIP-8141提案。2027年にステーブルコインでガス代支払い可能との観測が拡散（JinaCoin）"
+      "title": "BTC一時7.7万ドル割れ、CPI待ち",
+      "summary": "<cite index=\"16-1\">ビットコインは9月11日に一時7万7,000ドルを下回り、週間では3%の下落を記録</cite>。米CPI発表後の利上げ観測を注視（CRYPTO TIMES）"
     },
     {
       "tag": "オンチェーン",
-      "title": "UNI急騰、手数料バーンが話題",
-      "summary": "UniswapのUNIが週次で大幅高。手数料バーン制度稼働とRobinhood Chainでの取引急増が材料（KuCoin）"
+      "title": "ETH、ステーブルコインでガス代構想進展",
+      "summary": "<cite index=\"18-1\">Vitalik Buterin氏はUSDCなどでガス代を支払える提案「EIP-8141」について、過去数カ月で重要な進展があったと明らかにした</cite>（CoinDesk JAPAN）"
+    },
+    {
+      "tag": "銘柄動向",
+      "title": "プライバシー銘柄ZECが急落、調整局面",
+      "summary": "<cite index=\"16-1\">Zcash(ZEC)は24時間で9.7%下落、直近1年で約2220%上昇していた中での短期的な調整</cite>（CRYPTO TIMES）"
     }
   ]
 }
