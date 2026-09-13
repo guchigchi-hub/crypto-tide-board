@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-13",
-  "generatedAtISO": "2026-09-12T22:02:30.821Z",
+  "generatedAt": "2026-09-14",
+  "generatedAtISO": "2026-09-13T22:02:45.684Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ",
-      "title": "BTCの値動き、ウォール街時間に偏り",
-      "summary": "研究によるとBTC変動の50.6%がUTC13-21時に集中、2016-18年の38.4%から上昇（CRYPTO TIMES）"
+      "tag": "マクロ/価格",
+      "title": "BTC・ETH、9月半ばに値動き活発化",
+      "summary": "9月12日にBTCは1186万円前後、ETHは38.5万円台で推移、時価総額は420兆円規模（CRYPTO TIMES）"
     },
     {
       "tag": "規制",
-      "title": "米クラリティ法案、15日に重要投票",
-      "summary": "暗号資産規制の枠組みを定める米クラリティ法案が9月15日にクローチャー投票を迎える見通し（JinaCoin）"
+      "title": "クラリティ法案、上院採決へ攻防続く",
+      "summary": "トランプ氏が9月11日、CLARITY法案の利益相反規制を巡り顧問らと協議したとPOLITICOが報道（NADA NEWS/Yahoo!ニュース）"
     },
     {
-      "tag": "ETF",
-      "title": "米ビットコイン/ETH ETFに資金回帰",
-      "summary": "8月31日〜9月4日の週に約1539億円の純流入となり、3週連続の資金流入が続いている（ダイヤモンド・ザイ）"
+      "tag": "オンチェーン",
+      "title": "DOGE、ソラナDeFiで取引開始",
+      "summary": "ドージコインが資産ゲートウェイ経由でソラナ上に対応、ジュピター等主要アプリで取引可能に（BITTIMES）"
     }
   ]
 }
