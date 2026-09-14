@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-14",
-  "generatedAtISO": "2026-09-13T22:02:45.684Z",
+  "generatedAt": "2026-09-15",
+  "generatedAtISO": "2026-09-14T22:02:39.249Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/価格",
-      "title": "BTC・ETH、9月半ばに値動き活発化",
-      "summary": "9月12日にBTCは1186万円前後、ETHは38.5万円台で推移、時価総額は420兆円規模（CRYPTO TIMES）"
+      "tag": "オンチェーン/デリバティブ",
+      "title": "BTCオプション市場に強気転換",
+      "summary": "Deribitのコールオプション比率61.39%に上昇、12カ月ぶりの強気姿勢（Bitcoin News）"
     },
     {
-      "tag": "規制",
-      "title": "クラリティ法案、上院採決へ攻防続く",
-      "summary": "トランプ氏が9月11日、CLARITY法案の利益相反規制を巡り顧問らと協議したとPOLITICOが報道（NADA NEWS/Yahoo!ニュース）"
+      "tag": "ETF/アルトコイン",
+      "title": "ETH・XRP・SOLが週間最高上昇",
+      "summary": "BTC ETFが週間4.6億ドル流出の一方、イーサ等アルトコインが週間で過去最高の上昇を記録（Bitcoin News）"
     },
     {
-      "tag": "オンチェーン",
-      "title": "DOGE、ソラナDeFiで取引開始",
-      "summary": "ドージコインが資産ゲートウェイ経由でソラナ上に対応、ジュピター等主要アプリで取引可能に（BITTIMES）"
+      "tag": "マクロ",
+      "title": "AI減速懸念とCPIで軟調",
+      "summary": "AnthropicやOpenAI幹部のAI開発減速発言とインフレ再加速懸念でBTCが1200万円割れ（CRYPTO TIMES）"
     }
   ]
 }
