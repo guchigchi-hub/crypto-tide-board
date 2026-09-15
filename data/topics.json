@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-15",
-  "generatedAtISO": "2026-09-14T22:02:39.249Z",
+  "generatedAt": "2026-09-16",
+  "generatedAtISO": "2026-09-15T22:02:52.518Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "オンチェーン/デリバティブ",
-      "title": "BTCオプション市場に強気転換",
-      "summary": "Deribitのコールオプション比率61.39%に上昇、12カ月ぶりの強気姿勢（Bitcoin News）"
-    },
-    {
-      "tag": "ETF/アルトコイン",
-      "title": "ETH・XRP・SOLが週間最高上昇",
-      "summary": "BTC ETFが週間4.6億ドル流出の一方、イーサ等アルトコインが週間で過去最高の上昇を記録（Bitcoin News）"
-    },
-    {
       "tag": "マクロ",
-      "title": "AI減速懸念とCPIで軟調",
-      "summary": "AnthropicやOpenAI幹部のAI開発減速発言とインフレ再加速懸念でBTCが1200万円割れ（CRYPTO TIMES）"
+      "title": "FOMC控えBTCがレンジ推移",
+      "summary": "9月15日、BTCは77,187ドル前後で0.66％安、FOMC前に清算が両端に集中しETFは6,000BTC流出（JinaCoin）"
+    },
+    {
+      "tag": "オンチェーン",
+      "title": "ETH取引数が四半期最高を更新",
+      "summary": "Token Terminalの報告で2026年Q2のイーサリアムL1取引数が2億390万件と過去最高を記録（あたらしい経済）"
+    },
+    {
+      "tag": "国内サービス",
+      "title": "メルコイン口座数が拡大傾向",
+      "summary": "メルカリ子会社メルコインの暗号資産口座数が300万から400万規模へ拡大、初心者層が9割を占める（JinaCoin）"
     }
   ]
 }
