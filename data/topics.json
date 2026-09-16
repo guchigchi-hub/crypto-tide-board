@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-16",
-  "generatedAtISO": "2026-09-15T22:02:52.518Z",
+  "generatedAt": "2026-09-17",
+  "generatedAtISO": "2026-09-16T23:57:14.447Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ",
-      "title": "FOMC控えBTCがレンジ推移",
-      "summary": "9月15日、BTCは77,187ドル前後で0.66％安、FOMC前に清算が両端に集中しETFは6,000BTC流出（JinaCoin）"
+      "tag": "マクロ/規制",
+      "title": "BTC下落、FOMCとCLARITY法案が焦点",
+      "summary": "BTCは9/16時点で約1179万円、24時間で2%下落。CLARITY法案が上院で節目、FRB会合と重なり動向注目（CRYPTO TIMES）"
     },
     {
       "tag": "オンチェーン",
-      "title": "ETH取引数が四半期最高を更新",
-      "summary": "Token Terminalの報告で2026年Q2のイーサリアムL1取引数が2億390万件と過去最高を記録（あたらしい経済）"
+      "title": "ETH取引数が2四半期連続で過去最高",
+      "summary": "Token Terminal調査でETHメインネットの26年Q2取引件数が2億390万件と過去最高を更新（Yahoo!ニュース／あたらしい経済）"
     },
     {
-      "tag": "国内サービス",
-      "title": "メルコイン口座数が拡大傾向",
-      "summary": "メルカリ子会社メルコインの暗号資産口座数が300万から400万規模へ拡大、初心者層が9割を占める（JinaCoin）"
+      "tag": "マーケティング/採用拡大",
+      "title": "リップル、10週で大学スポーツ提携3件目",
+      "summary": "9月14日、リップルがルイビル大学バスケコートにXRPロゴ掲出で提携。7月カンザス大、9月フロリダ大に続く3件目（CRYPTO TIMES）"
     }
   ]
 }
