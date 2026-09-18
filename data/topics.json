@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-17",
-  "generatedAtISO": "2026-09-16T23:57:14.447Z",
+  "generatedAt": "2026-09-19",
+  "generatedAtISO": "2026-09-18T23:43:47.768Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ/規制",
-      "title": "BTC下落、FOMCとCLARITY法案が焦点",
-      "summary": "BTCは9/16時点で約1179万円、24時間で2%下落。CLARITY法案が上院で節目、FRB会合と重なり動向注目（CRYPTO TIMES）"
+      "tag": "マクロ",
+      "title": "FRB3年ぶり利上げもBTC底堅く推移",
+      "summary": "FRBが0.25%利上げを全会一致で決定、BTCは発表後も7万5000ドル台を維持（CRYPTO TIMES）"
     },
     {
-      "tag": "オンチェーン",
-      "title": "ETH取引数が2四半期連続で過去最高",
-      "summary": "Token Terminal調査でETHメインネットの26年Q2取引件数が2億390万件と過去最高を更新（Yahoo!ニュース／あたらしい経済）"
+      "tag": "ETF/機関資金",
+      "title": "ETH ETFは機関マネー流入続く",
+      "summary": "利上げは短期逆風もETH ETFへの機関資金流入は8月も継続、構造的な強さが試される局面（ZUU Web3）"
     },
     {
-      "tag": "マーケティング/採用拡大",
-      "title": "リップル、10週で大学スポーツ提携3件目",
-      "summary": "9月14日、リップルがルイビル大学バスケコートにXRPロゴ掲出で提携。7月カンザス大、9月フロリダ大に続く3件目（CRYPTO TIMES）"
+      "tag": "規制/DeFi",
+      "title": "SEC容認でUniswap急騰",
+      "summary": "SECがトークン化株式のAMM取引を容認、UniswapがUNI急騰・市場最大の受益者と見られ25%超上昇（TradingKey）"
     }
   ]
 }
