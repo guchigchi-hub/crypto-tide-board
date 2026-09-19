@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-19",
-  "generatedAtISO": "2026-09-18T23:43:47.768Z",
+  "generatedAt": "2026-09-20",
+  "generatedAtISO": "2026-09-19T23:45:08.141Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "マクロ",
       "title": "FRB3年ぶり利上げもBTC底堅く推移",
-      "summary": "FRBが0.25%利上げを全会一致で決定、BTCは発表後も7万5000ドル台を維持（CRYPTO TIMES）"
+      "summary": "FRBが9月16日に0.25pt利上げし3.75〜4.00%に。BTCは7万5000ドル台で踏みとどまる展開（CRYPTO TIMES／bitbank）"
     },
     {
-      "tag": "ETF/機関資金",
-      "title": "ETH ETFは機関マネー流入続く",
-      "summary": "利上げは短期逆風もETH ETFへの機関資金流入は8月も継続、構造的な強さが試される局面（ZUU Web3）"
+      "tag": "規制",
+      "title": "SEC、トークン化株式取引を条件付き容認",
+      "summary": "SECが9月17日、配当・議決権付与などを条件にトークン化株式のオンチェーン取引を5年間の時限措置で許可（Reuters／CNBC）"
     },
     {
-      "tag": "規制/DeFi",
-      "title": "SEC容認でUniswap急騰",
-      "summary": "SECがトークン化株式のAMM取引を容認、UniswapがUNI急騰・市場最大の受益者と見られ25%超上昇（TradingKey）"
+      "tag": "オンチェーン",
+      "title": "ビットマイン、ETH追加取得で保有拡大",
+      "summary": "Bitmineが直近1週間で2.7万ETH（約104億円）を追加取得し、保有量が総供給の4.9%に到達（コインオタク）"
     }
   ]
 }
