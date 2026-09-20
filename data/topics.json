@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-20",
-  "generatedAtISO": "2026-09-19T23:45:08.141Z",
+  "generatedAt": "2026-09-21",
+  "generatedAtISO": "2026-09-20T23:40:29.896Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "マクロ",
-      "title": "FRB3年ぶり利上げもBTC底堅く推移",
-      "summary": "FRBが9月16日に0.25pt利上げし3.75〜4.00%に。BTCは7万5000ドル台で踏みとどまる展開（CRYPTO TIMES／bitbank）"
+      "title": "対ロシア制裁法、BTCに新たな節目",
+      "summary": "米新制裁法により10月18日が新マクロ節目に。BTCは1260万円前後で推移（CRYPTO TIMES）"
     },
     {
-      "tag": "規制",
-      "title": "SEC、トークン化株式取引を条件付き容認",
-      "summary": "SECが9月17日、配当・議決権付与などを条件にトークン化株式のオンチェーン取引を5年間の時限措置で許可（Reuters／CNBC）"
+      "tag": "ETF",
+      "title": "ETH ETFで資金流出目立つ",
+      "summary": "9月15日にBTC・ETH ETFから計5.9億ドル流出、Clarity法案の停滞が背景（BeInCrypto）"
     },
     {
       "tag": "オンチェーン",
-      "title": "ビットマイン、ETH追加取得で保有拡大",
-      "summary": "Bitmineが直近1週間で2.7万ETH（約104億円）を追加取得し、保有量が総供給の4.9%に到達（コインオタク）"
+      "title": "AVAX急騰、機構連携期待で最高値圏",
+      "summary": "AVAXが24時間で約30%急騰し10ドル突破、ICE提携観測とPaxos連携、22日の主要アップグレードが材料（TradingKey）"
     }
   ]
 }
