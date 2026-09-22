@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-21",
-  "generatedAtISO": "2026-09-20T23:40:29.896Z",
+  "generatedAt": "2026-09-23",
+  "generatedAtISO": "2026-09-22T23:54:34.839Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "マクロ",
-      "title": "対ロシア制裁法、BTCに新たな節目",
-      "summary": "米新制裁法により10月18日が新マクロ節目に。BTCは1260万円前後で推移（CRYPTO TIMES）"
-    },
-    {
       "tag": "ETF",
-      "title": "ETH ETFで資金流出目立つ",
-      "summary": "9月15日にBTC・ETH ETFから計5.9億ドル流出、Clarity法案の停滞が背景（BeInCrypto）"
+      "title": "BTC現物ETFに2026年最大の流入",
+      "summary": "9月21日、米BTC現物ETFへ約9.99億ドルが流入し2026年最大の日次純流入を記録、BTCは8万7千ドル台まで上昇（CRYPTO TIMES／CoinDesk）"
     },
     {
-      "tag": "オンチェーン",
-      "title": "AVAX急騰、機構連携期待で最高値圏",
-      "summary": "AVAXが24時間で約30%急騰し10ドル突破、ICE提携観測とPaxos連携、22日の主要アップグレードが材料（TradingKey）"
+      "tag": "マクロ",
+      "title": "仮想通貨時価総額が一時3兆ドル突破",
+      "summary": "9月22日朝、暗号資産全体の時価総額が一時3兆ドルを超え、1月以来の水準に回復（JinaCoin／Bloomberg報道）"
+    },
+    {
+      "tag": "アルトコイン/ETF",
+      "title": "ETHやSOL・HYPE系ETFにも資金流入",
+      "summary": "BTCに加えイーサ・ソラナ・HYPE関連ETFにも資金が流入し機関需要の広がりを示す一方、XRP ETFは横ばい（Bitcoin.com News）"
     }
   ]
 }
