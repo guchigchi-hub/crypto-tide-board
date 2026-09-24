@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-23",
-  "generatedAtISO": "2026-09-22T23:54:34.839Z",
+  "generatedAt": "2026-09-24",
+  "generatedAtISO": "2026-09-24T00:05:56.568Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
       "tag": "ETF",
-      "title": "BTC現物ETFに2026年最大の流入",
-      "summary": "9月21日、米BTC現物ETFへ約9.99億ドルが流入し2026年最大の日次純流入を記録、BTCは8万7千ドル台まで上昇（CRYPTO TIMES／CoinDesk）"
+      "title": "BTC現物ETFに記録的資金流入",
+      "summary": "9月21日に約10億ドル流入。BTCは8.6万ドル台へ回復（99Bitcoins、株探）"
     },
     {
-      "tag": "マクロ",
-      "title": "仮想通貨時価総額が一時3兆ドル突破",
-      "summary": "9月22日朝、暗号資産全体の時価総額が一時3兆ドルを超え、1月以来の水準に回復（JinaCoin／Bloomberg報道）"
+      "tag": "オンチェーン",
+      "title": "ETH、STARK全面採用でブロック高速化へ",
+      "summary": "ヴィタリック氏、2年内にブロック生成12秒→4〜8秒に短縮する方針を上海で表明（JinaCoin）"
     },
     {
-      "tag": "アルトコイン/ETF",
-      "title": "ETHやSOL・HYPE系ETFにも資金流入",
-      "summary": "BTCに加えイーサ・ソラナ・HYPE関連ETFにも資金が流入し機関需要の広がりを示す一方、XRP ETFは横ばい（Bitcoin.com News）"
+      "tag": "アルトコイン",
+      "title": "XRP・SOLにもETF資金流入続く",
+      "summary": "BTC流出の一方、ETH・XRP・SOL建てETFへ資金分散して流入との報道（コインチョイス）"
     }
   ]
 }
