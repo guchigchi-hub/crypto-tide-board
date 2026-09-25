@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-24",
-  "generatedAtISO": "2026-09-24T00:05:56.568Z",
+  "generatedAt": "2026-09-25",
+  "generatedAtISO": "2026-09-25T00:07:29.051Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "ETF",
-      "title": "BTC現物ETFに記録的資金流入",
-      "summary": "9月21日に約10億ドル流入。BTCは8.6万ドル台へ回復（99Bitcoins、株探）"
+      "tag": "デリバティブ/オプション",
+      "title": "BTCオプション154億ドル大量満期",
+      "summary": "9月25日に約156億ドル分のBTCオプションが満期。BTCは84,000ドル割れ、米国債利回り上昇が重石（Yahoo Finance）"
     },
     {
-      "tag": "オンチェーン",
-      "title": "ETH、STARK全面採用でブロック高速化へ",
-      "summary": "ヴィタリック氏、2年内にブロック生成12秒→4〜8秒に短縮する方針を上海で表明（JinaCoin）"
+      "tag": "規制/オンチェーン",
+      "title": "CFTC、ETH先物の異常取引精査",
+      "summary": "CFTCがKalshi上のETH無期限先物で約50億ドル規模の一律注文パターンを調査中、市場の公正性が焦点（CoinMarketCap）"
     },
     {
       "tag": "アルトコイン",
-      "title": "XRP・SOLにもETF資金流入続く",
-      "summary": "BTC流出の一方、ETH・XRP・SOL建てETFへ資金分散して流入との報道（コインチョイス）"
+      "title": "ライトコインが独歩高、ネットワーク活況",
+      "summary": "LTCが1月来高値を更新し月間37%高。24時間で約10億ドルの送金増、ゴールデンクロス形成でBTC比で優位（CoinDesk/KuCoin）"
     }
   ]
 }
