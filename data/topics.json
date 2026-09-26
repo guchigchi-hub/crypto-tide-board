@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-09-25",
-  "generatedAtISO": "2026-09-25T00:07:29.051Z",
+  "generatedAt": "2026-09-26",
+  "generatedAtISO": "2026-09-26T00:14:04.321Z",
   "model": "claude-sonnet-5",
   "topics": [
     {
-      "tag": "デリバティブ/オプション",
-      "title": "BTCオプション154億ドル大量満期",
-      "summary": "9月25日に約156億ドル分のBTCオプションが満期。BTCは84,000ドル割れ、米国債利回り上昇が重石（Yahoo Finance）"
+      "tag": "ETF",
+      "title": "米暗号資産ETF、主要5銘柄で純流入",
+      "summary": "BTC現物ETFは6日連続、ETHも5日連続で純流入。累計流入額はBTCで574億ドル超に拡大（JinaCoin）"
     },
     {
-      "tag": "規制/オンチェーン",
-      "title": "CFTC、ETH先物の異常取引精査",
-      "summary": "CFTCがKalshi上のETH無期限先物で約50億ドル規模の一律注文パターンを調査中、市場の公正性が焦点（CoinMarketCap）"
+      "tag": "セキュリティ",
+      "title": "Bitgetで不正送金、約610億円に上方修正",
+      "summary": "25日に発覚した流出額を26日に上方修正。出金再開に向け検証・準備を継続中（JinaCoin）"
     },
     {
-      "tag": "アルトコイン",
-      "title": "ライトコインが独歩高、ネットワーク活況",
-      "summary": "LTCが1月来高値を更新し月間37%高。24時間で約10億ドルの送金増、ゴールデンクロス形成でBTC比で優位（CoinDesk/KuCoin）"
+      "tag": "オンチェーン",
+      "title": "ソラナ、確定時間短縮へ新機能開発中",
+      "summary": "次期アップグレード「Alpenglow」でブロック確定を12.8秒から約0.15秒へ短縮目指す、メインネット導入時期は未定（JinaCoin）"
     }
   ]
 }
